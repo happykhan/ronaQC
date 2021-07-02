@@ -1,12 +1,11 @@
 import { useEffect, useRef, React } from "react"
-import {select, scaleLinear, scaleLog, axisBottom, axisLeft,  line, max,  curveCardinal } from 'd3'
+import {select, scaleLinear, axisBottom, axisLeft,  line, max,  curveCardinal } from 'd3'
 
 
 function Covplot({coverage}){
     const height = 500; 
     const width = 700; 
     const svgRef = useRef();
-    console.log(coverage);
     useEffect(() => {
         const svg = select(svgRef.current);
             
