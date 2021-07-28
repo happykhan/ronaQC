@@ -1,39 +1,50 @@
-import { useEffect, useRef, React } from "react"
-import {select, scaleLinear, axisBottom, axisLeft,  line, max,  curveCardinal } from 'd3'
+import { useEffect, useRef, React, useState} from "react"
+import {select, scaleLinear, axisBottom, axisLeft,  line, max, curveCardinal, zoom, zoomTransform } from "d3"
 
 
 function Covplot({coverage}){
     const height = 500; 
     const width = 700; 
     const svgRef = useRef();
+    const [currentZoomState, setCurrentZoomState] = useState();
+    
     useEffect(() => {
         const svg = select(svgRef.current);
             
         const margin = 50; 
         const plotHeight = height - margin; 
         const plotWidth = width - margin; 
+        // Scales and line generator 
         const xScale = scaleLinear()
-             .domain([0, coverage.length])
+             .domain([0, coverage.length - 1])
              .range([margin, plotWidth]);
+          if (currentZoomState){ 
+              const newXScale = currentZoomState.rescaleX(xScale);
+              xScale.domain(newXScale.domain()); 
+
+          }
+  
+
         const yScale = scaleLinear()
              .domain([0, max(coverage)])
-             .range([0, plotHeight]);
+             .range([plotHeight, margin]).nice();
         const xAxis = axisBottom(xScale);
         const yAxis = axisLeft(yScale);
-        const myLine = line()
-            .x((value, index) =>   xScale(index))
+        const lineGenerator = line()
+            .x((value, index) => xScale(index))
             .y(yScale)
             .curve(curveCardinal);
+
         svg.selectAll("path")
            .data([coverage])
            .join("path")
-           .attr("d", value => myLine(value))
+           .attr("d", lineGenerator)
            .attr("fill", "none")
            .attr("stroke", "blue");
         svg.append("text")             
            .attr("transform",
                  "translate(" + (width/2) + " ," + 
-                                (height) + ")")
+                                (height -10) + ")")
            .style("text-anchor", "middle")
            .text("Genome position");
         svg.append("text")
@@ -46,12 +57,20 @@ function Covplot({coverage}){
         svg.select(".x-axis").style("transform", "translateY("+ plotHeight + "px)").call(xAxis)
         svg.select(".y-axis").style("transform", "translateX("+ margin + "px)").call(yAxis)
 
-      }, [coverage]);
+        // zoom 
+        const zoomBehaviour = zoom()
+          .scaleExtent([0.5, 5])
+          .translateExtent([0, 0], [plotWidth, plotHeight])
+          .on("zoom", () => {
+            const zoomState = zoomTransform(svg.node());
+          //  setCurrentZoomState(zoomState);
+          }); 
+        svg.call(zoomBehaviour);
+      }, [currentZoomState, coverage]);
         
 
     return (
         <div>
-        {coverage.length}
         <svg ref={svgRef} height={height} width={width} overflow="visible">
           <g className="x-axis" />
           <g className="y-axis" />

@@ -9,6 +9,9 @@ import Covplot from './Covplot'
 import ref from './ref.array'
 import primers from './nCov-2019.insert.bed'
 import { getSnpBadge, getBaseBadge, getAmpBadge, getReadBadge } from  './BadgeValue.js'
+import { makeConsensus, snpCount }  from './Helper'
+import Summary from './Summary'
+import columns from './SummaryColumns'
 
 let samtools = new Aioli("samtools/1.10");
 let bedtools2 = new Aioli("bedtools2/2.29.2");
@@ -23,58 +26,8 @@ bedtools2
   .then(() => bedtools2.exec("--version"))
   .then(d => console.log(d.stdout));  
 
- 
-function maxChar(str) {
-  const charMap = {};
-  let max = 0;
-  let maxChar = '';
-
-  // create character map
-  for (let char of str) {
-    if (char.match("[ATGC]")){
-    if (charMap[char]) {
-      // increment the character's value if the character existed in the map
-      charMap[char]++;
-    } else {
-      // Otherwise, the value of the character will be increamented by 1
-      charMap[char] = 1;
-    }
-  }
-  }
-
-  // find the most commonly used character
-  for (let char in charMap) {
-    if (charMap[char] > max) {
-      max = charMap[char];
-      maxChar = char;
-    }
-  }
-
-  return maxChar;
-  }
-
-function makeConsensus(consensus, covCutOff = 5){
-    let cons = Array.from('N'.repeat(29904)) 
-    console.log('Calculating consensus...');
-    const pileup = consensus.split("\n"); 
-    let calledBases = 0; 
-    for(var i = 0;i < pileup.length;i++){
-        const cov = +pileup[i].split('\t')[3]; 
-        const pos = +pileup[i].split('\t')[1]; 
-        const bases = pileup[i].split('\t')[4]; 
-        if (cov >= covCutOff ){
-          cons[pos] = maxChar(bases); 
-          calledBases = calledBases + 1 ; 
-        }
-    }
-    console.log('Calculated consensus.');
-    console.log(calledBases);
-    return cons; 
-}
-
-
 function App() {
-  const [state, setState] = useState({ coverage: [], negativeSnp: -1, negativeGenomeRecovery: -1, negativeFullReads: -1, negativeAmplicons: -1, negativeTotalReads: -1 });
+  const [state, setState] = useState({ coverage: [], negativeSnp: -1, negativeGenomeRecovery: -1, negativeFullReads: -1, negativeAmplicons: -1, negativeTotalReads: -1, records: [] });
 
   const addBamFile = (event) => {
     setState(prevState => ({...prevState, negativeGenomeRecovery: -2, negativeSnp: -2, negativeAmplicons: -2,  negativeFullReads: -2 }));
@@ -102,9 +55,9 @@ function App() {
               console.log('DEPTH STDERR: ' + d.stderr)
             }
 
-            const blankCoverageArray = d.stdout.split("\n").map(v => +v.split('\t')[2]); 
+            const blankCoverageArray = d.stdout.split("\n").map(v => Number.isNaN(+v.split('\t')[2]) ? 0: +v.split('\t')[2] ); 
             setState(prevState=> ({...prevState, coverage: blankCoverageArray, 
-                negativeGenomeRecovery:Number(Math.round(blankCoverageArray.filter(v => v > 9 ).length))})); // / blankCoverageArray.length * 100 + 'e2' ) + 'e-2' )}))            
+                negativeGenomeRecovery:Number(Math.round(blankCoverageArray.filter(v => v >= 10 ).length))})); // / blankCoverageArray.length * 100 + 'e2' ) + 'e-2' )}))            
             fetch(primers).then(response => response.text()).then(amp => {
               // Fetch amplicon coverage 
               const bedFile = amp.split('\n');
@@ -144,12 +97,7 @@ function App() {
               console.log('VIEW STDERR: ' + d.stderr)
             }            
             const onefoureight = +d.stdout.split('\n')[0];
-
-//            const cigarArray = d.stdout.split("\n").map(v => v.split('\t')[5]); 
- //           const onefoureight = cigarArray.reduce(function(n, val) {
-  //            return n + (['148M', '149M', '150M'].includes(val));
-//              }, 0);                          
-              setState(prevState=> ({...prevState, negativeFullReads: onefoureight}))
+            setState(prevState=> ({...prevState, negativeFullReads: onefoureight}))
           });
 
 
@@ -163,15 +111,8 @@ function App() {
               }
               const consensus = makeConsensus(d.stdout) ;  
               console.log(consensus);
-              let snpCount = 0; 
-              for(var i = 0;i < consensus.length;i++){
-                if (consensus[i + 1] !== 'N'){
-                  if (consensus[i + 1] !== refArray[i]) {
-                    snpCount = snpCount + 1 ; 
-                  }
-                }
-              }
-              setState(prevState=> ({...prevState, negativeSnp: snpCount}))
+              const snpCounter = snpCount(consensus, refArray)
+              setState(prevState=> ({...prevState, negativeSnp: snpCounter}))
 
             }); 
           }); 
@@ -184,7 +125,7 @@ function App() {
       <Navbar.Brand href="#">RonaQC</Navbar.Brand>
       <Container>
         <Form>
-          <Form.File  onChange={(e) => addBamFile(e) }  label="Choose SARS-CoV2 sorted BAM"/>
+          <Form.File  onChange={(e) => addBamFile(e) }  label="Choose SARS-CoV2 sorted BAM (Negative control)"/>
         </Form>      
       </Container>
       <br></br>
@@ -211,8 +152,14 @@ function App() {
       </Container>
       <Container>
       {(state.negativeGenomeRecovery === -1) ? 
-          <Alert variant='info'>Load a BAM file to get started</Alert>:  (state.negativeGenomeRecovery === -2) ? 
+          <Alert variant='info'>Load a BAM file from a negative control to get started</Alert>:  (state.negativeGenomeRecovery === -2) ? 
           <Spinner animation="grow" />: <Covplot coverage={state.coverage} />}
+      </Container>
+      <Container>
+        {(state.records.length > 0)
+          ? <Summary columns={columns} data={state.records} />
+          : <Alert variant='info'>Load a BAM file from a sample to get started</Alert>
+    }   
       </Container>
     </div>
   );
