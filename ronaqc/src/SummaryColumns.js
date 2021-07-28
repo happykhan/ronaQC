@@ -4,23 +4,12 @@ const columns = [
     Header: "Filename", accessor: "name",
     },
     {
-    Header: "N50", accessor: "n50",
+        Header: "Called bases", accessor: "genomeRecovery",
     },
     {
-    Header: "Number of contigs", accessor: "noContigs",
-    },
-    {
-      Header: "Total assembled bases", accessor: "totalBases",
-      },
-    {
-      Header: "Rank", accessor: "rank",
-      },      
-      {
-        Header: "Taxon", accessor: "taxon",
-        },              
-        {
-          Header: "Status", accessor: "status",
-          },                      
+    Header: "Low coverage amplicons", accessor: "missingAmplicons",
+    }
+
 ]; 
 
 export default columns;

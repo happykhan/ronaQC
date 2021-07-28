@@ -9,7 +9,7 @@ import Covplot from './Covplot'
 import ref from './ref.array'
 import primers from './nCov-2019.insert.bed'
 import { getSnpBadge, getBaseBadge, getAmpBadge, getReadBadge } from  './BadgeValue.js'
-import { makeConsensus, snpCount }  from './Helper'
+import { makeConsensus, snpCount, updateMainState }  from './Helper'
 import Summary from './Summary'
 import columns from './SummaryColumns'
 
@@ -29,26 +29,53 @@ bedtools2
 function App() {
   const [state, setState] = useState({ coverage: [], negativeSnp: -1, negativeGenomeRecovery: -1, negativeFullReads: -1, negativeAmplicons: -1, negativeTotalReads: -1, records: [] });
 
+  const addSampleBamFiles = (event) => {
+    for(var k = 0; k < event.target.files.length; k++){
+      let currentFile = event.target.files[k]
+      Aioli
+      .mount(currentFile)
+      .then(f => {
+        // Fetch the missing amplicons
+
+        samtools.exec(`depth -a ${f.path}`).then(d =>  {
+          if (d.stderr !== ""){
+            console.log('DEPTH STDERR: ' + d.stderr)
+          }
+          const coverageArray = d.stdout.split("\n").map(v => Number.isNaN(+v.split('\t')[2]) ? 0: +v.split('\t')[2] ); 
+          fetch(primers).then(response => response.text()).then(amp => {
+            // Fetch amplicon coverage 
+            const bedFile = amp.split('\n');
+            let ampList = [] ;
+            for(var j = 0;j< bedFile.length;j++){
+              let start = +bedFile[j].split("\t")[1];
+              let stop = +bedFile[j].split("\t")[2];
+              let idname = +bedFile[j].split("\t")[3];
+              let covAmp = 0; 
+              for(var k = start; k < stop; k++){
+                if(coverageArray[k] > 9){
+                  covAmp = covAmp + 1; 
+                }
+              }
+              if (covAmp / (stop - start) < 0.4){ 
+                ampList.push(idname); 
+              }
+            }
+            let genomeRecovery = Number(Math.round(coverageArray.filter(v => v >= 10 ).length))
+            const newStats = {name: f.name, missingAmplicons: ampList.join(', '), genomeRecovery: genomeRecovery}; 
+            setState(prevState=> ({...prevState, records: updateMainState(state.records, newStats) }));
+          });          
+
+        });
+      });
+    }
+  }
+
   const addBamFile = (event) => {
     setState(prevState => ({...prevState, negativeGenomeRecovery: -2, negativeSnp: -2, negativeAmplicons: -2,  negativeFullReads: -2 }));
 
     Aioli
         .mount(event.target.files[0])
         .then(f => {
-            // fetch(primers).then(primerPath => {
-            // Aioli.mount(primerPath.url).then(primerBed => {
-            //   bedtools2.exec(`coverage -a ${primerBed.path} -b ${f.path}`).then(d => {
-            //            if (d.stderr !== ""){
-            //              console.log('BEDCOV STDERR: ' + d.stderr)
-            //            }            
-            //            console.log('BEDCOV : ' + d.stdout)
-            //            const blankCoverageArray = d.stdout.split("\n").map(v => +v.split('\t')[2]); 
-            //     });
-
-            // }); 
-          
-            // });
-
           // Fetch the coverage depth 
           samtools.exec(`depth -a ${f.path}`).then(d =>  {
             if (d.stderr !== ""){
@@ -154,6 +181,11 @@ function App() {
       {(state.negativeGenomeRecovery === -1) ? 
           <Alert variant='info'>Load a BAM file from a negative control to get started</Alert>:  (state.negativeGenomeRecovery === -2) ? 
           <Spinner animation="grow" />: <Covplot coverage={state.coverage} />}
+      </Container>
+      <Container>
+        <Form>
+          <Form.File  onChange={(e) => addSampleBamFiles(e) }  label="Choose SARS-CoV2 sorted BAMs"  />
+        </Form>      
       </Container>
       <Container>
         {(state.records.length > 0)

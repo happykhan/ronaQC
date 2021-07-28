@@ -40,7 +40,6 @@ export function makeConsensus(consensus, covCutOff = 10){
           const bases = pileup[i].split('\t')[4]; 
           if (cov >= covCutOff ){
             if ([1870, 2879, 9833].includes(pos)) {
-                debugger; 
 
             } 
             cons[pos] = maxChar(bases.toUpperCase()); 
@@ -67,5 +66,36 @@ export function snpCount(consensus, refArray){
     }
   }
   return snpCount;   
+
+}
+            // fetch(primers).then(primerPath => {
+            // Aioli.mount(primerPath.url).then(primerBed => {
+            //   bedtools2.exec(`coverage -a ${primerBed.path} -b ${f.path}`).then(d => {
+            //            if (d.stderr !== ""){
+            //              console.log('BEDCOV STDERR: ' + d.stderr)
+            //            }            
+            //            console.log('BEDCOV : ' + d.stdout)
+            //            const blankCoverageArray = d.stdout.split("\n").map(v => +v.split('\t')[2]); 
+            //     });
+
+            // }); 
+          
+            // });
+export const updateMainState = (state, row) => {
+  let foundIndex = -1; 
+  let count = 0 
+  for (const element of state) {
+    if (element['name'] === row['name']) {
+      foundIndex = count
+    }
+    count++;
+  }  
+  if (foundIndex > -1){
+    const newRows = [...state];
+    newRows[foundIndex] = row; 
+    return newRows;
+  } else {
+    return [...state, row];
+  }
 
 }
