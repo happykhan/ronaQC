@@ -8,5 +8,7 @@ if the samples are reliable for detecting SARS-CoV-2, phylogenetic analysis, and
 
 # Deploy
 
+```
 npm run build 
 netlify deploy --prod
+```
