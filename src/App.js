@@ -32,40 +32,41 @@ function App() {
   const addSampleBamFiles = (event) => {
     for(var k = 0; k < event.target.files.length; k++){
       let currentFile = event.target.files[k]
+      
       Aioli
       .mount(currentFile)
-      .then(f => {
+      .then(async f => {
+        setState(prevState=> ({...prevState, records: updateMainState(state.records, {name: f.name}) }));
         // Fetch the missing amplicons
-
-        samtools.exec(`depth -a ${f.path}`).then(d =>  {
-          if (d.stderr !== ""){
-            console.log('DEPTH STDERR: ' + d.stderr)
-          }
-          const coverageArray = d.stdout.split("\n").map(v => Number.isNaN(+v.split('\t')[2]) ? 0: +v.split('\t')[2] ); 
-          fetch(primers).then(response => response.text()).then(amp => {
-            // Fetch amplicon coverage 
-            const bedFile = amp.split('\n');
-            let ampList = [] ;
-            for(var j = 0;j< bedFile.length;j++){
-              let start = +bedFile[j].split("\t")[1];
-              let stop = +bedFile[j].split("\t")[2];
-              let idname = +bedFile[j].split("\t")[3];
-              let covAmp = 0; 
-              for(var k = start; k < stop; k++){
-                if(coverageArray[k] > 9){
-                  covAmp = covAmp + 1; 
-                }
-              }
-              if (covAmp / (stop - start) < 0.4){ 
-                ampList.push(idname); 
+        const d = await samtools.exec(`depth -a ${f.path}`);
+        if (d.stderr !== ""){
+          console.log('DEPTH STDERR: ' + d.stderr)
+        }
+        const coverageArray = d.stdout.split("\n").map(v => Number.isNaN(+v.split('\t')[2]) ? 0: +v.split('\t')[2] ); 
+        fetch(primers).then(response => response.text()).then(amp => {
+          // Fetch amplicon coverage 
+          const bedFile = amp.split('\n');
+          let ampList = [] ;
+          for(var j = 0;j< bedFile.length;j++){
+            let start = +bedFile[j].split("\t")[1];
+            let stop = +bedFile[j].split("\t")[2];
+            let idname = +bedFile[j].split("\t")[3];
+            let covAmp = 0; 
+            for(var k = start; k < stop; k++){
+              if(coverageArray[k] > 9){
+                covAmp = covAmp + 1; 
               }
             }
-            let genomeRecovery = Number(Math.round(coverageArray.filter(v => v >= 10 ).length))
-            const newStats = {name: f.name, missingAmplicons: ampList.join(', '), genomeRecovery: genomeRecovery}; 
-            setState(prevState=> ({...prevState, records: updateMainState(state.records, newStats) }));
-          });          
-
-        });
+            if (covAmp / (stop - start) < 0.4){ 
+              ampList.push(idname); 
+            }
+          }
+          let genomeRecovery = Number(Math.round(coverageArray.filter(v => v >= 10 ).length))
+          const newStats = {name: f.name, missingAmplicons: ampList.join(', '), genomeRecovery: genomeRecovery}; 
+          console.log(newStats);
+          setState(prevState=> ({...prevState, records: updateMainState(state.records, newStats) }));
+        }); 
+ 
       });
     }
   }
@@ -184,7 +185,7 @@ function App() {
       </Container>
       <Container>
         <Form>
-          <Form.File  onChange={(e) => addSampleBamFiles(e) }  label="Choose SARS-CoV2 sorted BAMs"  />
+          <Form.File  onChange={(e) => addSampleBamFiles(e) }  label="Choose SARS-CoV2 sorted BAMs"  multiple  />
         </Form>      
       </Container>
       <Container>

@@ -84,6 +84,7 @@ export function snpCount(consensus, refArray){
 export const updateMainState = (state, row) => {
   let foundIndex = -1; 
   let count = 0 
+  debugger;
   for (const element of state) {
     if (element['name'] === row['name']) {
       foundIndex = count
