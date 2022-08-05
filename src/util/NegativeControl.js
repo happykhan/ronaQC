@@ -71,12 +71,12 @@ const mappedReads = async (f, fileName, CLI) => {
   return [properReads, onefoureight];
 };
 
-const amplicons = async (f, fileName, CLI) => {
+const amplicons = async (f, fileName, CLI, isSample = false) => {
+  const bedFileLoc = await fetch("nCov-2019.insert.bed");
   const depthOutput = await CLI.exec(`samtools depth -a ${f}`);
   const blankCoverageArray = depthOutput
     .split("\n")
     .map((v) => (Number.isNaN(+v.split("\t")[2]) ? 0 : +v.split("\t")[2]));
-  const bedFileLoc = await fetch("nCov-2019.insert.bed");
   const amp = await bedFileLoc.text();
   const bedFile = amp.split("\n");
   let ampList = [];
@@ -90,8 +90,13 @@ const amplicons = async (f, fileName, CLI) => {
         covAmp = covAmp + 1;
       }
     }
-    if (covAmp / (stop - start) > 0.4) {
-      ampList.push(idname);
+
+    if (isSample) {
+      ampList.push({ idname, coverage: covAmp / (stop - start) });
+    } else {
+      if (covAmp / (stop - start) > 0.4) {
+        ampList.push(idname);
+      }
     }
   }
   return ampList;

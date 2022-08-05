@@ -75,7 +75,14 @@ const Covplot = ({ coverage }) => {
       .attr("height", 5)
       .attr("stroke", "black")
       .attr("fill", "#69a2b2");
-
+    svg
+      .append("rect")
+      .attr("x", margin)
+      .attr("y", yScale(10))
+      .attr("width", plotWidth - margin)
+      .attr("height", 0.5)
+      .attr("stroke", "red")
+      .attr("fill", "red");
     const xAxis = axisBottom(xScale);
     svg
       .select(".x-axis")

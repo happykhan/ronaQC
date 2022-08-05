@@ -17,6 +17,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
 import Seo from "../components/Seo";
 import { NavLink } from "react-router-dom";
+import {
+  createTheme,
+  responsiveFontSizes,
+  ThemeProvider,
+} from "@mui/material/styles";
 
 const navLinks = [
   { name: "Import", href: "/" },
@@ -24,6 +29,12 @@ const navLinks = [
   { name: "Sample report", href: "/report/" },
   { name: "Help", href: "/help/" },
 ];
+
+let theme = createTheme();
+theme = responsiveFontSizes(theme);
+theme.typography.body1 = {
+  fontSize: "1.2rem",
+};
 
 const Layout = ({ children }) => {
   const [open, setOpen] = useState(false);
@@ -37,7 +48,7 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <Seo />
       <AppBar position="sticky">
@@ -87,7 +98,7 @@ const Layout = ({ children }) => {
       </AppBar>
 
       {children}
-    </div>
+    </ThemeProvider>
   );
 };
 export default Layout;
