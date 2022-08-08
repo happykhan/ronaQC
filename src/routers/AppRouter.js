@@ -15,7 +15,7 @@ const AppRouter = () => {
   const [negativeControl, dispatch] = useReducer(NegativeControlReducer, []);
   const [samples, sampleDispatch] = useReducer(SampleReducer, []);
   return (
-    <BrowserRouter>
+    <BrowserRouter data-testid={`App-page`}>
       <Layout>
         <NegativeControlContext.Provider value={{ negativeControl, dispatch }}>
           <SampleContext.Provider value={{ samples, sampleDispatch }}>

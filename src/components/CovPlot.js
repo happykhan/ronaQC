@@ -1,18 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  select,
-  scaleBand,
-  axisBottom,
-  axisLeft,
-  line,
-  max,
-  curveCardinal,
-  zoom,
-  zoomTransform,
-  scaleLinear,
-  maxIndex,
-} from "d3";
-import { ConstructionOutlined } from "@mui/icons-material";
+import React, { useEffect, useRef } from "react";
+import * as d3 from "d3";
 
 const getCovAve = (coverage, perChunk = 100) => {
   const result = coverage.reduce((resultArray, item, index) => {
@@ -38,7 +25,7 @@ const getMax = (coverageObj) => {
   let index = coverageObj.map((o) => o.i);
   let values = coverageObj.map((o) => o.val);
 
-  return [max(index), max(values)];
+  return [d3.max(index), d3.max(values)];
 };
 
 const Covplot = ({ coverage }) => {
@@ -53,14 +40,16 @@ const Covplot = ({ coverage }) => {
   const covAve = getCovAve(coverage, chunksize);
   const [maxIndex, maxValue] = getMax(covAve);
   useEffect(() => {
-    const svg = select(svgRef.current);
+    const svg = d3.select(svgRef.current);
     const plotHeight = height - margin;
     const plotWidth = width - margin;
-    const xScale = scaleLinear()
+    const xScale = d3
+      .scaleLinear()
       .domain([0, maxIndex])
       .range([margin, plotWidth])
       .nice();
-    const yScale = scaleLinear()
+    const yScale = d3
+      .scaleLinear()
       .domain([0, maxValue])
       .range([plotHeight, 0])
       .nice();
@@ -83,7 +72,7 @@ const Covplot = ({ coverage }) => {
       .attr("height", 0.5)
       .attr("stroke", "red")
       .attr("fill", "red");
-    const xAxis = axisBottom(xScale);
+    const xAxis = d3.axisBottom(xScale);
     svg
       .select(".x-axis")
       .style("transform", `translateY(${plotHeight}px)`)
@@ -93,7 +82,7 @@ const Covplot = ({ coverage }) => {
       .attr("dx", "-.8em")
       .attr("dy", ".15em")
       .attr("transform", "rotate(-65)");
-    const yAxis = axisLeft(yScale);
+    const yAxis = d3.axisLeft(yScale);
     svg
       .select(".y-axis")
       .style("transform", `translateX(${margin}px)`)

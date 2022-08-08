@@ -2,7 +2,6 @@ const path = require("path");
 
 module.exports = {
   entry: ["core-js/stable", "regenerator-runtime/runtime", "./src/app.js"],
-
   output: {
     path: path.resolve(__dirname, "public/scripts"),
     filename: "app.js",

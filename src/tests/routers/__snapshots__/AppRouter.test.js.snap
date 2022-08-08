@@ -1,0 +1,100 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render help page correctly 1`] = `
+<div
+  class="MuiContainer-root MuiContainer-maxWidthMd css-xdmu94-MuiContainer-root"
+  data-testid="Import-page"
+>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-bhp9pd-MuiPaper-root-MuiCard-root"
+  >
+    <div
+      class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+    >
+      <h3
+        class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1h1zemz-MuiTypography-root"
+      >
+        Import
+      </h3>
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-3 css-qwfiov-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-1upwz12-MuiTypography-root"
+          >
+            RonaQC accepts mapped SARS-CoV-2 reads (BAM format), generated from the SARS-CoV-2 bioinformatic pipelines like ARTIC, and any control samples from the respective sequencing run (negative/positive) as input. It will then assess the levels of cross contamination and primer contamination in the samples, and determine if the samples are reliable for detecting SARS-CoV-2, phylogenetic analysis, and/or submission to public databases.
+          </p>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-7 css-uqwprf-MuiGrid-root"
+        >
+          <form>
+            <input
+              type="file"
+            />
+            <span
+              class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  css-zcbmsk-MuiButtonBase-root-MuiButton-root"
+              role="button"
+              tabindex="0"
+              type="submit"
+            >
+              Upload Negative control
+              <span
+                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              />
+            </span>
+          </form>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-7 css-uqwprf-MuiGrid-root"
+        >
+          <form>
+            <input
+              multiple=""
+              type="file"
+            />
+            <span
+              class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  css-sghohy-MuiButtonBase-root-MuiButton-root"
+              role="button"
+              tabindex="0"
+              type="submit"
+            >
+              Upload Sample data
+              <span
+                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              />
+            </span>
+          </form>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-7 css-uqwprf-MuiGrid-root"
+        >
+          <button
+            class="MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root Mui-disabled  css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
+            disabled=""
+            tabindex="-1"
+            type="button"
+          >
+            Demo
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-7 css-uqwprf-MuiGrid-root"
+        >
+          <button
+            class="MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root Mui-disabled  css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
+            disabled=""
+            tabindex="-1"
+            type="button"
+          >
+            Demo (repeat analysis)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

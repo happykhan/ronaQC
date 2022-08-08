@@ -1,22 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  select,
-  scaleBand,
-  axisBottom,
-  axisLeft,
-  max,
-  scaleSequential,
-  interpolateInferno,
-} from "d3";
+import React, { useEffect, useRef } from "react";
+import * as d3 from "d3";
 
 const randomCoverageArray = () => {
   return Array.from({ length: 97 }, () => Math.floor(Math.random() * 1000));
 };
 
 const getMax = (ampliconObj) => {
-  let values = ampliconObj.map((o) => max(o.coverage));
+  let values = ampliconObj.map((o) => d3.max(o.coverage));
 
-  return [max(values)];
+  return [d3.max(values)];
 };
 
 const AmpPlot = ({ amplicons }) => {
@@ -45,27 +37,30 @@ const AmpPlot = ({ amplicons }) => {
   const maxCoverage = 1;
 
   useEffect(() => {
-    const svg = select(svgRef.current);
+    const svg = d3.select(svgRef.current);
     const plotHeight = height - margin;
     const plotWidth = width - margin;
 
     // Create X scale
-    const xScale = scaleBand()
+    const xScale = d3
+      .scaleBand()
       .range([margin, plotWidth])
       .domain(indexList)
       .padding(0.05);
 
     // Create Y scale
 
-    const yScale = scaleBand()
+    const yScale = d3
+      .scaleBand()
       .range([plotHeight, 0])
       .domain(amplicons.map((ele) => ele.name))
       .padding(0.05);
 
     // Create coverage scale
 
-    const covScale = scaleSequential()
-      .interpolator(interpolateInferno)
+    const covScale = d3
+      .scaleSequential()
+      .interpolator(d3.interpolateInferno)
       .domain([0, maxCoverage]);
 
     console.log(amplicons);
@@ -107,7 +102,7 @@ const AmpPlot = ({ amplicons }) => {
       .style("stroke", "none")
       .style("opacity", 0.8);
 
-    const xAxis = axisBottom(xScale);
+    const xAxis = d3.axisBottom(xScale);
     svg
       .select(".x-axis")
       .style("transform", `translateY(${plotHeight}px)`)
@@ -117,7 +112,7 @@ const AmpPlot = ({ amplicons }) => {
       .attr("dx", "-.8em")
       .attr("dy", ".15em")
       .attr("transform", "rotate(-90)");
-    const yAxis = axisLeft(yScale);
+    const yAxis = d3.axisLeft(yScale);
     svg
       .select(".y-axis")
       .style("transform", `translateX(${margin}px)`)
