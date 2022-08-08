@@ -2,6 +2,8 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7ee08bfe-aff7-4260-a4c0-498708e5a17b/deploy-status)](https://app.netlify.com/sites/ronaqc/deploys)
 
+[![Node.js CI](https://github.com/happykhan/ronaQC/actions/workflows/node.js.yml/badge.svg)](https://github.com/happykhan/ronaQC/actions/workflows/node.js.yml)
+
 Source code for web resource, RonaQC. RonaQC accepts mapped SARS-CoV-2 reads (BAM format), generated
 from the SARS-CoV-2 bioinformatic pipelines like ARTIC,
 and any control samples from the respective sequencing run (negative/positive) as input.
