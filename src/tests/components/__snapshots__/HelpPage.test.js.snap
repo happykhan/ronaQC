@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render help page correctly 1`] = `
+<div
+  class="MuiContainer-root MuiContainer-maxWidthMd css-xdmu94-MuiContainer-root"
+  data-testid="Help-page"
+>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-bhp9pd-MuiPaper-root-MuiCard-root"
+  >
+    <div
+      class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+    >
+      <h3
+        class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-pxxorf-MuiTypography-root"
+      >
+        Help
+      </h3>
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        RonaQC accepts mapped SARS-CoV-2 reads (BAM format), generated from the SARS-CoV-2 bioinformatic pipelines like ARTIC, and any control samples from the respective sequencing run (negative/positive) as input. It will then assess the levels of cross contamination and primer contamination in the samples, and determine if the samples are reliable for detecting SARS-CoV-2, phylogenetic analysis, and/or submission to public databases.
+      </p>
+    </div>
+  </div>
+</div>
+`;

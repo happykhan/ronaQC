@@ -2,7 +2,7 @@ import React from "react";
 import { Typography, Container, Card, CardContent } from "@mui/material/";
 
 const HelpPage = () => (
-  <Container maxWidth="md">
+  <Container maxWidth="md" data-testid={`Help-page`}>
     <Card>
       <CardContent>
         <Typography variant="h3" my={3} gutterBottom>

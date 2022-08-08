@@ -146,7 +146,7 @@ const ImportPage = () => {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" data-testid={`Import-page`}>
       <Card>
         <CardContent>
           <Typography variant="h3" my={3} gutterBottom>

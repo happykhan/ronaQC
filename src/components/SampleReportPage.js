@@ -73,7 +73,7 @@ const SampleReportPage = () => {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" data-testid={`Sample-report-page`}>
       <Card>
         <CardContent>
           <Typography variant="h3" my={3} gutterBottom>

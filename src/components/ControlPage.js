@@ -84,7 +84,7 @@ const SummaryTable = (control) => {
 const ControlPage = () => {
   const { negativeControl } = useContext(NegativeControlContext);
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" data-testid={`Control-page`}>
       <Card>
         <CardContent>
           <Typography variant="h3" my={3} gutterBottom>
