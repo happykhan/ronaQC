@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Helmet } from "react-helmet";
-import { useLocation } from "@reach/router";
 
 const Seo = ({ title, description, image, url, article }) => {
   const seo = {
