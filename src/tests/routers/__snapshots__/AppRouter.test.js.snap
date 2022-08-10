@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should render help page correctly 1`] = `
+exports[`should render Full site (import page) correctly 1`] = `
 <div
   class="MuiContainer-root MuiContainer-maxWidthMd css-xdmu94-MuiContainer-root"
   data-testid="Import-page"
