@@ -4,7 +4,6 @@ const SampleReducer = (state, action) => {
   switch (action.type) {
     case "ADD_SAMPLE":
       const index = state.findIndex((sample) => sample.name === action.name);
-      console.log("ADD_SAMPLE", state, index);
       if (index === -1) {
         return [...state, { name: action.name, file: action.file }];
       } else {
@@ -13,6 +12,7 @@ const SampleReducer = (state, action) => {
     case "REMOVE_SAMPLE":
       return state.filter((sample) => sample.name !== action.name);
     case "EDIT_SAMPLE":
+      console.log(action);
       return state.map((sample) => {
         if (sample.name == action.name) {
           return {

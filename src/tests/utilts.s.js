@@ -13,9 +13,7 @@ import {
 
 test("should filter sort by amount", async () => {
   const filePath = "src/tests/Test-NC.mapped.bam";
-  console.log("es");
   const fileHandle = await fsPromises.readFile("src/tests/Test-NC.mapped.bam");
-  console.log(fileHandle);
   let CLI = await new Aioli("samtools/1.10");
   const mountedFiles = await CLI.mount([fileHandle]);
 
