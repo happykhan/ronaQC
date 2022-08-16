@@ -99,7 +99,9 @@ const ImportPage = () => {
     });
   };
   const generateNCMetrics = async (fileHandle, dispatch) => {
+    console.log("hi");
     let CLI = await new Aioli(["samtools/1.10", "ivar/1.3.1", "grep/3.7"]);
+    console.log("hi 2 ");
     const mountedFiles = await CLI.mount([fileHandle]);
     getCoverage(mountedFiles, fileHandle, CLI);
     getSnp(mountedFiles, fileHandle, CLI);

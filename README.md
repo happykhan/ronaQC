@@ -18,3 +18,9 @@ The software is live on https://ronaqc.netlify.app/
 npm run build
 netlify deploy --prod
 ```
+
+# My working fork of Aioli (required)
+
+```
+npm i  https://github.com/happykhan/aioli/releases/download/2.4.0j/biowasm-aioli-2.4.0.tgz
+```
