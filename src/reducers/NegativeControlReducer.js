@@ -16,6 +16,8 @@ const negativeControlReducer = (state, action) => {
       return { ...state, properReads: action.properReads };
     case "ADD_MAPPED_READS":
       return { ...state, onefoureight: action.onefoureight };
+    case "ADD_TOTAL_READS":
+      return { ...state, totalReads: action.totalReads };
     default:
       return state;
   }

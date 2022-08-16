@@ -36,9 +36,10 @@ const SampleReportPage = () => {
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
-            <TableCell>SNPs</TableCell>
             <TableCell>Called bases</TableCell>
-            <TableCell>Best mapped reads / Well mapped reads</TableCell>
+            <TableCell>
+              Best mapped reads / Well mapped reads / Total reads
+            </TableCell>
             <TableCell>Missing amplicons</TableCell>
           </TableRow>
         </TableHead>
@@ -46,7 +47,6 @@ const SampleReportPage = () => {
           {samples.map((element, index) => (
             <TableRow key={element.name}>
               <TableCell>{element.name}</TableCell>
-              <TableCell>Not Implemented</TableCell>
               <TableCell>Not Implemented</TableCell>
               <TableCell>
                 {" "}
@@ -56,7 +56,11 @@ const SampleReportPage = () => {
                 /{" "}
                 {element.properReads
                   ? element.properReads
-                  : "Unknown mapped reads"}
+                  : "Unknown mapped reads"}{" "}
+                /{" "}
+                {element.totalReads
+                  ? element.totalReads
+                  : "Unknown total reads"}
               </TableCell>
               <TableCell>
                 {element.missingAmplicons

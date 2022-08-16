@@ -36,7 +36,9 @@ const SummaryTable = (control) => {
               <CheckCircleIcon sx={{ color: "green" }} />
             )}
           </TableCell>
-          <TableCell>Best mapped reads / Well mapped reads</TableCell>
+          <TableCell>
+            Best mapped reads / Well mapped reads / Total reads
+          </TableCell>
           <TableCell>
             Detected amplicons{" "}
             {(control.amplicons ? control.amplicons.length : 0) > 1 && (
@@ -66,7 +68,8 @@ const SummaryTable = (control) => {
               ? control.onefoureight
               : "Unknown mapped reads"}{" "}
             /{" "}
-            {control.properReads ? control.properReads : "Unknown mapped reads"}
+            {control.properReads ? control.properReads : "Unknown mapped reads"}{" "}
+            / {control.totalReads ? control.totalReads : "Unknown total reads"}{" "}
           </TableCell>
           <TableCell>
             {control.amplicons
