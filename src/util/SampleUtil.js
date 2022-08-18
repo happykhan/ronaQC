@@ -46,7 +46,6 @@ export const sampleConsensusMetrics = async (fastaOut, fileName) => {
   const baseQCpass = consensusLength / 29903 > 0.5;
   // Create final fasta file output.
   const fastaString = `>${fileName}\n${consensusString.match(/.{1,80}/g)}`;
-  console.log("ambig", ambigiousBasesCount);
   return [
     consensusLength,
     ambigiousBasesCount,

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   Typography,
   Container,
@@ -21,6 +21,7 @@ import Aioli from "@biowasm/aioli";
 const ImportPage = () => {
   const { negativeControl, dispatch } = useContext(NegativeControlContext);
   const { Sample, sampleDispatch } = useContext(SampleContext);
+  const [articV, setArticV] = useState("nCov-2019.v4.1.insert.bed");
 
   const submitControl = (event) => {
     const negControlFile = event.target.files[0];
@@ -31,7 +32,7 @@ const ImportPage = () => {
       file: negControlFile,
     });
     // Send off for processing
-    generateNCMetrics(negControlFile, dispatch);
+    generateNCMetrics(negControlFile, dispatch, articV);
   };
 
   const submitSamples = (event) => {
@@ -44,7 +45,7 @@ const ImportPage = () => {
         file: row,
       });
       // Send off for processing
-      generateSampleMetrics(row);
+      generateSampleMetrics(row, articV);
     });
   };
 
@@ -95,22 +96,21 @@ const ImportPage = () => {
     });
   };
 
-  const getAmplicons = async (mountedFiles, fileHandle, CLI) => {
-    const ampList = await amplicons(mountedFiles, fileHandle, CLI);
+  const getAmplicons = async (mountedFiles, fileHandle, CLI, articV) => {
+    const ampList = await amplicons(mountedFiles, fileHandle, CLI, articV);
     dispatch({
       type: "ADD_AMPLICONS",
       name: fileHandle.name,
       amplicons: ampList,
     });
   };
-  const generateNCMetrics = async (fileHandle, dispatch) => {
+  const generateNCMetrics = async (fileHandle, dispatch, articV) => {
     let CLI = await new Aioli(["samtools/1.10", "ivar/1.3.1", "grep/3.7"]);
     const mountedFiles = await CLI.mount([fileHandle]);
-
     getCoverage(mountedFiles, fileHandle, CLI);
     getSnp(mountedFiles, fileHandle, CLI);
     getMappedReads(mountedFiles, fileHandle, CLI);
-    getAmplicons(mountedFiles, fileHandle, CLI);
+    getAmplicons(mountedFiles, fileHandle, CLI, articV);
   };
 
   const getSampleConsensus = async (mountedFiles, fileHandle, CLI) => {
@@ -138,7 +138,6 @@ const ImportPage = () => {
         highQCpass,
         baseQCpass,
       ] = await sampleConsensusMetrics(fastaOut, fileHandle.name);
-      console.log(highQCpass, baseQCpass);
       const highQCpassString = highQCpass ? "True" : "False";
       const baseQCpassString = baseQCpass ? "True" : "False";
       sampleDispatch({
@@ -180,9 +179,16 @@ const ImportPage = () => {
     mountedFiles,
     fileHandle,
     CLI,
+    articV,
     isSample
   ) => {
-    const ampList = await amplicons(mountedFiles, fileHandle, CLI, isSample);
+    const ampList = await amplicons(
+      mountedFiles,
+      fileHandle,
+      CLI,
+      articV,
+      isSample
+    );
     const missingAmplicons = Array.from(ampList)
       .filter((ele) => parseFloat(ele.coverage) < 0.4)
       .map((ele) => ele.idname);
@@ -192,11 +198,11 @@ const ImportPage = () => {
       updates: { amplicons: ampList, missingAmplicons },
     });
   };
-  const generateSampleMetrics = async (fileHandle) => {
+  const generateSampleMetrics = async (fileHandle, articV) => {
     let CLI = await new Aioli(["samtools/1.10", "ivar/1.3.1", "grep/3.7"]);
     const mountedFiles = await CLI.mount([fileHandle]);
     const cov = getSampleConsensus(mountedFiles, fileHandle, CLI);
-    const amp = getSampleAmplicons(mountedFiles, fileHandle, CLI, true);
+    const amp = getSampleAmplicons(mountedFiles, fileHandle, CLI, articV, true);
     const map = getSampleMappedReads(mountedFiles, fileHandle, CLI);
     await Promise.all([cov, map, amp]);
     sampleDispatch({
@@ -206,6 +212,11 @@ const ImportPage = () => {
         comments: "Done",
       },
     });
+  };
+
+  const handleVersion = (e) => {
+    const articVersion = e.target.value;
+    setArticV(articVersion);
   };
 
   return (
@@ -227,6 +238,16 @@ const ImportPage = () => {
                 determine if the samples are reliable for detecting SARS-CoV-2,
                 phylogenetic analysis, and/or submission to public databases.
               </Typography>
+            </Grid>
+            <Grid item xs={7}>
+              ARTIC Primer version:{" "}
+              <select onChange={(e) => handleVersion(e)}>
+                <option value="nCov-2019.v4.1.insert.bed">ARTIC-V4.1</option>
+                <option value="nCov-2019.v4.insert.bed">ARTIC-V4</option>
+                <option value="nCov-2019.v3.insert.bed">ARTIC-V3</option>
+                <option value="nCov-2019.v2.insert.bed">ARTIC-V2</option>
+                <option value="nCov-2019.v1.insert.bed">ARTIC-V1</option>
+              </select>
             </Grid>
             <Grid item xs={7}>
               <form onChange={(e) => submitControl(e)}>

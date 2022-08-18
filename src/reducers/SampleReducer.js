@@ -12,7 +12,6 @@ const SampleReducer = (state, action) => {
     case "REMOVE_SAMPLE":
       return state.filter((sample) => sample.name !== action.name);
     case "EDIT_SAMPLE":
-      console.log(action);
       return state.map((sample) => {
         if (sample.name == action.name) {
           return {
