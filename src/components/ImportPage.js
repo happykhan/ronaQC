@@ -13,6 +13,7 @@ import {
   mappedReads,
   amplicons,
 } from "../util/NegativeControl";
+import { sampleConsensus, sampleConsensusMetrics } from "../util/SampleUtil";
 import NegativeControlContext from "../context/NegativeControlContext";
 import SampleContext from "../context/SampleContext";
 import Aioli from "@biowasm/aioli";
@@ -64,7 +65,6 @@ const ImportPage = () => {
   const getSnp = async (mountedFiles, fileHandle, CLI) => {
     let snpInfo = await snpMethod(mountedFiles, fileHandle, CLI);
     snpInfo = snpInfo ? snpInfo : 0;
-    console.log("snp", snpInfo);
     dispatch({
       type: "ADD_SNP_COUNT",
       name: fileHandle.name,
@@ -106,10 +106,61 @@ const ImportPage = () => {
   const generateNCMetrics = async (fileHandle, dispatch) => {
     let CLI = await new Aioli(["samtools/1.10", "ivar/1.3.1", "grep/3.7"]);
     const mountedFiles = await CLI.mount([fileHandle]);
+
     getCoverage(mountedFiles, fileHandle, CLI);
     getSnp(mountedFiles, fileHandle, CLI);
     getMappedReads(mountedFiles, fileHandle, CLI);
     getAmplicons(mountedFiles, fileHandle, CLI);
+  };
+
+  const getSampleConsensus = async (mountedFiles, fileHandle, CLI) => {
+    sampleDispatch({
+      type: "EDIT_SAMPLE",
+      name: fileHandle.name,
+      updates: {
+        comments: "Generating consensus",
+      },
+    });
+    const fastaOut = await sampleConsensus(mountedFiles, fileHandle, CLI);
+    sampleDispatch({
+      type: "EDIT_SAMPLE",
+      name: fileHandle.name,
+      updates: {
+        comments: "Generated consensus",
+      },
+    });
+    if (fastaOut.length > 200) {
+      const [
+        consensusLength,
+        ambigiousBasesCount,
+        longestNRun,
+        fastaString,
+        highQCpass,
+        baseQCpass,
+      ] = await sampleConsensusMetrics(fastaOut, fileHandle.name);
+      console.log(highQCpass, baseQCpass);
+      const highQCpassString = highQCpass ? "True" : "False";
+      const baseQCpassString = baseQCpass ? "True" : "False";
+      sampleDispatch({
+        type: "EDIT_SAMPLE",
+        name: fileHandle.name,
+        updates: {
+          consensusLength,
+          ambigiousBasesCount,
+          longestNRun,
+          highQCpass: highQCpassString,
+          baseQCpass: baseQCpassString,
+        },
+      });
+    } else {
+      sampleDispatch({
+        type: "EDIT_SAMPLE",
+        name: fileHandle.name,
+        updates: {
+          comments: "Error: Could not generate consensus",
+        },
+      });
+    }
   };
 
   const getSampleMappedReads = async (mountedFiles, fileHandle, CLI) => {
@@ -135,19 +186,26 @@ const ImportPage = () => {
     const missingAmplicons = Array.from(ampList)
       .filter((ele) => parseFloat(ele.coverage) < 0.4)
       .map((ele) => ele.idname);
-    console.log("missing", missingAmplicons);
     sampleDispatch({
       type: "EDIT_SAMPLE",
       name: fileHandle.name,
       updates: { amplicons: ampList, missingAmplicons },
     });
-    console.log("amp", ampList);
   };
   const generateSampleMetrics = async (fileHandle) => {
     let CLI = await new Aioli(["samtools/1.10", "ivar/1.3.1", "grep/3.7"]);
     const mountedFiles = await CLI.mount([fileHandle]);
-    getSampleMappedReads(mountedFiles, fileHandle, CLI);
-    getSampleAmplicons(mountedFiles, fileHandle, CLI, true);
+    const cov = getSampleConsensus(mountedFiles, fileHandle, CLI);
+    const amp = getSampleAmplicons(mountedFiles, fileHandle, CLI, true);
+    const map = getSampleMappedReads(mountedFiles, fileHandle, CLI);
+    await Promise.all([cov, map, amp]);
+    sampleDispatch({
+      type: "EDIT_SAMPLE",
+      name: fileHandle.name,
+      updates: {
+        comments: "Done",
+      },
+    });
   };
 
   return (

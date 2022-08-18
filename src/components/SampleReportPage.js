@@ -25,39 +25,50 @@ const SampleReportPage = () => {
       })),
     }));
 
-  console.log("amp", amplicons);
-
   const SummaryTable = (tableSamples) => {
     const { samples } = tableSamples;
-    console.log(samples);
 
     return (
       <Table sx={{ minWidth: 400 }} aria-label="Sample table">
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
-            <TableCell>Called bases</TableCell>
-            <TableCell>
-              Best mapped reads / Well mapped reads / Total reads
-            </TableCell>
+            <TableCell>Ambigious bases</TableCell>
+            <TableCell>Longest run of N</TableCell>
+            <TableCell>QC Pass (High/Base)</TableCell>
+            <TableCell>Consensus Length</TableCell>
+            <TableCell>Mapped reads (Best/Well/Total)</TableCell>
             <TableCell>Missing amplicons</TableCell>
+            <TableCell>Comments</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {samples.map((element, index) => (
             <TableRow key={element.name}>
               <TableCell>{element.name}</TableCell>
-              <TableCell>Not Implemented</TableCell>
+              <TableCell>
+                {typeof element.ambigiousBasesCount == "number"
+                  ? element.ambigiousBasesCount
+                  : "Unknown"}
+              </TableCell>
+              <TableCell>
+                {element.longestNRun ? element.longestNRun : "Unknown"}
+              </TableCell>
               <TableCell>
                 {" "}
-                {element.onefoureight
-                  ? element.onefoureight
-                  : "Unknown mapped reads"}{" "}
-                /{" "}
-                {element.properReads
-                  ? element.properReads
-                  : "Unknown mapped reads"}{" "}
-                /{" "}
+                {element.highQCpass ? element.highQCpass : "Unknown"} /{" "}
+                {element.baseQCpass ? element.baseQCpass : "Unknown"}
+              </TableCell>
+              <TableCell>
+                {" "}
+                {element.consensusLength
+                  ? element.consensusLength
+                  : "Unknown bases"}
+              </TableCell>
+              <TableCell>
+                {" "}
+                {element.onefoureight ? element.onefoureight : "Unknown"} /{" "}
+                {element.properReads ? element.properReads : "Unknown"}/{" "}
                 {element.totalReads
                   ? element.totalReads
                   : "Unknown total reads"}
@@ -68,6 +79,10 @@ const SampleReportPage = () => {
                     ? element.missingAmplicons.join(", ")
                     : "All amplicons found"
                   : "Unknown missing amplicons"}
+              </TableCell>
+              <TableCell>
+                {element.comments == "Done" ? "" : <CircularProgress />}
+                {element.comments ? element.comments : "No comments"}
               </TableCell>
             </TableRow>
           ))}

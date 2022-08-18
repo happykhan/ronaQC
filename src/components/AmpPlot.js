@@ -27,7 +27,6 @@ const AmpPlot = ({ amplicons }) => {
   //   { name: "8.mapped.bam", coverage: randomCoverageArray() },
   // ];
 
-  console.log(" Real amplicons", amplicons);
   const indexList = Array.from({ length: 97 }, (ele, index) =>
     (index + 1).toString()
   );
@@ -63,7 +62,6 @@ const AmpPlot = ({ amplicons }) => {
       .interpolator(d3.interpolateInferno)
       .domain([0, maxCoverage]);
 
-    console.log(amplicons);
     let ampl = amplicons.map((ele) =>
       ele.coverage.map((cov, index) => ({
         name: ele.name,
@@ -76,7 +74,6 @@ const AmpPlot = ({ amplicons }) => {
       []
     );
 
-    console.log("AMPLS", ampl);
     svg.selectAll("rect").remove();
 
     svg

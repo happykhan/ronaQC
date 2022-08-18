@@ -1,5 +1,3 @@
-import { ConstructionOutlined } from "@mui/icons-material";
-
 const covDepth = async (f, fileName, CLI) => {
   const version = await CLI.exec("samtools --version-only");
   console.log(
@@ -44,7 +42,6 @@ const snpMethod = async (
     `ivar variants -p out test.pileup -m ${ivarMinDepth} -q ${ivarMinVariantQuality} -t ${ivarMinFreqThreshold} -r ref.fasta`
   );
   const ivarOut = await CLI.exec("grep .* out.tsv");
-  console.log(ivarOut);
   const snpList = ivarOut
     .split(/\r?\n/)
     .map((element) => element.split(/\t/))
@@ -55,7 +52,6 @@ const snpMethod = async (
         element[13] == "TRUE" &&
         parseFloat(element[11]) >= ivarMinDepth
     );
-  console.log("snp count", snpList);
   const snpCounter = snpList.length ? snpList.length : "No SNPs";
   return snpCounter;
 };
