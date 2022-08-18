@@ -60,29 +60,27 @@ const mappedReads = async (f, fileName, CLI) => {
   const statOut = await CLI.exec(`samtools flagstat ${f}`);
   const totalReads = statOut.split("\n")[0].split(" ")[0];
   const properReads = statOut.split("\n")[8].split(" ")[0];
-  console.log(statOut);
   // Fetch the "good" mapped read
   // samtools view /data/322537-PC_S1084.mapped.bam -F 4 -m 148 -c -q 60
   const viewOut = await CLI.exec(`samtools view -F 4 -m 148 -c -q 60 ${f}`);
   const onefoureight = viewOut.split("\n")[0];
-  console.log("statout", statOut);
-  console.log("viewout", viewOut);
   return [properReads, onefoureight, totalReads];
 };
 
-const amplicons = async (f, fileName, CLI, isSample = false) => {
-  const bedFileLoc = await fetch("nCov-2019.insert.bed");
+const amplicons = async (f, fileName, CLI, articV, isSample = false) => {
+  const bedFileLoc = await fetch("primer_schemes/" + articV);
   const depthOutput = await CLI.exec(`samtools depth -a ${f}`);
   const blankCoverageArray = depthOutput
     .split("\n")
     .map((v) => (Number.isNaN(+v.split("\t")[2]) ? 0 : +v.split("\t")[2]));
   const amp = await bedFileLoc.text();
+
   const bedFile = amp.split("\n");
   let ampList = [];
   for (var j = 0; j < bedFile.length; j++) {
     let start = +bedFile[j].split("\t")[1];
     let stop = +bedFile[j].split("\t")[2];
-    let idname = +bedFile[j].split("\t")[3];
+    let idname = bedFile[j].split("\t")[3];
     let covAmp = 0;
     for (var k = start; k < stop; k++) {
       if (blankCoverageArray[k] > 9) {

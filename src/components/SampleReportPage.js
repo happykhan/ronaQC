@@ -76,7 +76,7 @@ const SampleReportPage = () => {
               <TableCell>
                 {element.missingAmplicons
                   ? element.missingAmplicons.length > 0
-                    ? element.missingAmplicons.join(", ")
+                    ? element.missingAmplicons.length
                     : "All amplicons found"
                   : "Unknown missing amplicons"}
               </TableCell>

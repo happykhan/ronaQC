@@ -31,6 +31,39 @@ exports[`should render Full site (import page) correctly 1`] = `
         <div
           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-7 css-uqwprf-MuiGrid-root"
         >
+          ARTIC Primer version:
+           
+          <select>
+            <option
+              value="nCov-2019.v4.1.insert.bed"
+            >
+              ARTIC-V4.1
+            </option>
+            <option
+              value="nCov-2019.v4.insert.bed"
+            >
+              ARTIC-V4
+            </option>
+            <option
+              value="nCov-2019.v3.insert.bed"
+            >
+              ARTIC-V3
+            </option>
+            <option
+              value="nCov-2019.v2.insert.bed"
+            >
+              ARTIC-V2
+            </option>
+            <option
+              value="nCov-2019.v1.insert.bed"
+            >
+              ARTIC-V1
+            </option>
+          </select>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-7 css-uqwprf-MuiGrid-root"
+        >
           <form>
             <input
               type="file"
