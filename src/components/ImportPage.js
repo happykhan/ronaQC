@@ -101,6 +101,7 @@ const ImportPage = () => {
   const generateNCMetrics = async (fileHandle, dispatch) => {
     let CLI = await new Aioli(["samtools/1.10", "ivar/1.3.1", "grep/3.7"]);
     const mountedFiles = await CLI.mount([fileHandle]);
+
     getCoverage(mountedFiles, fileHandle, CLI);
     getSnp(mountedFiles, fileHandle, CLI);
     getMappedReads(mountedFiles, fileHandle, CLI);
@@ -108,7 +109,21 @@ const ImportPage = () => {
   };
 
   const getSampleConsensus = async (mountedFiles, fileHandle, CLI) => {
+    sampleDispatch({
+      type: "EDIT_SAMPLE",
+      name: fileHandle.name,
+      updates: {
+        comments: "Generating consensus",
+      },
+    });
     const fastaOut = await sampleConsensus(mountedFiles, fileHandle, CLI);
+    sampleDispatch({
+      type: "EDIT_SAMPLE",
+      name: fileHandle.name,
+      updates: {
+        comments: "Generated consensus",
+      },
+    });
     if (fastaOut.length > 200) {
       const [
         consensusLength,
@@ -118,6 +133,9 @@ const ImportPage = () => {
         highQCpass,
         baseQCpass,
       ] = await sampleConsensusMetrics(fastaOut, fileHandle.name);
+      console.log(highQCpass, baseQCpass);
+      const highQCpassString = highQCpass ? "True" : "False";
+      const baseQCpassString = baseQCpass ? "True" : "False";
       sampleDispatch({
         type: "EDIT_SAMPLE",
         name: fileHandle.name,
@@ -125,8 +143,8 @@ const ImportPage = () => {
           consensusLength,
           ambigiousBasesCount,
           longestNRun,
-          highQCpass,
-          baseQCpass,
+          highQCpass: highQCpassString,
+          baseQCpass: baseQCpassString,
         },
       });
     } else {
@@ -134,7 +152,7 @@ const ImportPage = () => {
         type: "EDIT_SAMPLE",
         name: fileHandle.name,
         updates: {
-          error: "Could not generate consensus",
+          comments: "Error: Could not generate consensus",
         },
       });
     }
@@ -172,9 +190,17 @@ const ImportPage = () => {
   const generateSampleMetrics = async (fileHandle) => {
     let CLI = await new Aioli(["samtools/1.10", "ivar/1.3.1", "grep/3.7"]);
     const mountedFiles = await CLI.mount([fileHandle]);
-    getSampleConsensus(mountedFiles, fileHandle, CLI);
-    getSampleAmplicons(mountedFiles, fileHandle, CLI, true);
-    getSampleMappedReads(mountedFiles, fileHandle, CLI);
+    const cov = getSampleConsensus(mountedFiles, fileHandle, CLI);
+    const amp = getSampleAmplicons(mountedFiles, fileHandle, CLI, true);
+    const map = getSampleMappedReads(mountedFiles, fileHandle, CLI);
+    await Promise.all([cov, map, amp]);
+    sampleDispatch({
+      type: "EDIT_SAMPLE",
+      name: fileHandle.name,
+      updates: {
+        comments: "Done",
+      },
+    });
   };
 
   return (

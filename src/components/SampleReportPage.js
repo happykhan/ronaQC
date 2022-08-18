@@ -47,7 +47,7 @@ const SampleReportPage = () => {
             <TableRow key={element.name}>
               <TableCell>{element.name}</TableCell>
               <TableCell>
-                {element.ambigiousBasesCount
+                {typeof element.ambigiousBasesCount == "number"
                   ? element.ambigiousBasesCount
                   : "Unknown"}
               </TableCell>
@@ -78,7 +78,8 @@ const SampleReportPage = () => {
                   : "Unknown missing amplicons"}
               </TableCell>
               <TableCell>
-                {element.error ? `ERRORS: ${element.error}` : "No errors"}
+                {element.comments == "Done" ? "" : <CircularProgress />}
+                {element.comments ? element.comments : "No comments"}
               </TableCell>
             </TableRow>
           ))}

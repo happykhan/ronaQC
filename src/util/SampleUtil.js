@@ -42,8 +42,8 @@ export const sampleConsensusMetrics = async (fastaOut, fileName) => {
     .length;
 
   // Calculate high-QC pass and base-QC pass
-  const highQCpass = !!(consensusLength / 29903) > 0.9;
-  const baseQCpass = !!(consensusLength / 29903) > 0.5;
+  const highQCpass = consensusLength / 29903 > 0.9;
+  const baseQCpass = consensusLength / 29903 > 0.5;
   // Create final fasta file output.
   const fastaString = `>${fileName}\n${consensusString.match(/.{1,80}/g)}`;
   console.log("ambig", ambigiousBasesCount);
