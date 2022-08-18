@@ -73,7 +73,7 @@ const ImportPage = () => {
   };
 
   const getMappedReads = async (mountedFiles, fileHandle, CLI) => {
-    const [properReads, onefoureight] = await mappedReads(
+    const [properReads, onefoureight, totalReads] = await mappedReads(
       mountedFiles,
       fileHandle,
       CLI
@@ -87,6 +87,11 @@ const ImportPage = () => {
       type: "ADD_MAPPED_READS",
       name: fileHandle.name,
       onefoureight,
+    });
+    dispatch({
+      type: "ADD_TOTAL_READS",
+      name: fileHandle.name,
+      totalReads,
     });
   };
 
@@ -159,7 +164,7 @@ const ImportPage = () => {
   };
 
   const getSampleMappedReads = async (mountedFiles, fileHandle, CLI) => {
-    const [properReads, onefoureight] = await mappedReads(
+    const [properReads, onefoureight, totalReads] = await mappedReads(
       mountedFiles,
       fileHandle,
       CLI
@@ -167,7 +172,7 @@ const ImportPage = () => {
     sampleDispatch({
       type: "EDIT_SAMPLE",
       name: fileHandle.name,
-      updates: { properReads, onefoureight },
+      updates: { properReads, onefoureight, totalReads },
     });
   };
 

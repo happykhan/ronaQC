@@ -69,7 +69,7 @@ exports[`should render Control page 1`] = `
               class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1ygcj2i-MuiTableCell-root"
               scope="col"
             >
-              Best mapped reads / Well mapped reads
+              Best mapped reads / Well mapped reads / Total reads
             </th>
             <th
               class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1ygcj2i-MuiTableCell-root"
@@ -116,6 +116,10 @@ exports[`should render Control page 1`] = `
               /
                
               Unknown mapped reads
+               
+              / 
+              Unknown total reads
+               
             </td>
             <td
               class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-1ex1afd-MuiTableCell-root"

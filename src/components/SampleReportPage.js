@@ -37,7 +37,7 @@ const SampleReportPage = () => {
             <TableCell>Longest run of N</TableCell>
             <TableCell>QC Pass (High/Base)</TableCell>
             <TableCell>Consensus Length</TableCell>
-            <TableCell>Mapped reads (Best/Well)</TableCell>
+            <TableCell>Mapped reads (Best/Well/Total)</TableCell>
             <TableCell>Missing amplicons</TableCell>
             <TableCell>Comments</TableCell>
           </TableRow>
@@ -68,7 +68,10 @@ const SampleReportPage = () => {
               <TableCell>
                 {" "}
                 {element.onefoureight ? element.onefoureight : "Unknown"} /{" "}
-                {element.properReads ? element.properReads : "Unknown"}
+                {element.properReads ? element.properReads : "Unknown"}/{" "}
+                {element.totalReads
+                  ? element.totalReads
+                  : "Unknown total reads"}
               </TableCell>
               <TableCell>
                 {element.missingAmplicons
