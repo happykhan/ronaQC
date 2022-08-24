@@ -276,6 +276,21 @@ const ImportPage = () => {
               </form>
             </Grid>
             <Grid item xs={7}>
+              <Typography variant="body1" my={2}>
+                Don't have any data? Click the button below for sample data with
+                sequenced controls:
+              </Typography>
+
+              <Button
+                variant="outlined"
+                color="primary"
+                href="/ronaqc_small_test.zip"
+                download="ronaqc_small_test.zip"
+              >
+                Download sample data
+              </Button>
+            </Grid>
+            <Grid item xs={7}>
               <Button variant="outlined" color="primary" disabled>
                 Demo
               </Button>
