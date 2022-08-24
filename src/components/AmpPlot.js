@@ -16,6 +16,7 @@ const AmpPlot = ({ amplicons }) => {
   const width = 800;
   const margin = 100;
   const svgRef = useRef();
+  console.log(amplicons);
   // const ampliconsRand = [
   //   { name: "1.mapped.bam", coverage: randomCoverageArray() },
   //   { name: "2.mapped.bam", coverage: randomCoverageArray() },

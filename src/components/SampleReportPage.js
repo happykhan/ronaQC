@@ -19,7 +19,7 @@ const SampleReportPage = () => {
   const amplicons = samples
     .filter((ele) => !!ele.amplicons)
     .map((ele) => ({
-      name: ele.name.replace(/\.mapped\.bam/, ""),
+      name: ele.name.replace(/\.mapped\.bam/, "").replace(/\.bam/, ""),
       coverage: ele.amplicons.map((cov) => ({
         coverage: cov.coverage ? cov.coverage : 0,
       })),
