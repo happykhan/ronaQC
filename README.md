@@ -18,3 +18,10 @@ The software is live on https://ronaqc.netlify.app/
 npm run build
 netlify deploy --prod
 ```
+
+
+# Test data
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7018405.svg)](https://doi.org/10.5281/zenodo.7018405) Test data is available here: https://zenodo.org/record/7018405
+
+ 

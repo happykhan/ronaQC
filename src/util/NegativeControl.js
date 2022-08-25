@@ -67,7 +67,7 @@ const mappedReads = async (f, fileName, CLI) => {
   return [properReads, onefoureight, totalReads];
 };
 
-const amplicons = async (f, fileName, CLI, articV, isSample = false) => {
+const amplicons = async (f, fileName, CLI, articV) => {
   const bedFileLoc = await fetch("primer_schemes/" + articV);
   const depthOutput = await CLI.exec(`samtools depth -a ${f}`);
   const blankCoverageArray = depthOutput
@@ -77,6 +77,7 @@ const amplicons = async (f, fileName, CLI, articV, isSample = false) => {
 
   const bedFile = amp.split("\n");
   let ampList = [];
+  let ampListName = [];
   for (var j = 0; j < bedFile.length; j++) {
     let start = +bedFile[j].split("\t")[1];
     let stop = +bedFile[j].split("\t")[2];
@@ -88,15 +89,11 @@ const amplicons = async (f, fileName, CLI, articV, isSample = false) => {
       }
     }
 
-    if (isSample) {
-      ampList.push({ idname, coverage: covAmp / (stop - start) });
-    } else {
-      if (covAmp / (stop - start) > 0.4) {
-        ampList.push(idname);
-      }
-    }
+      ampList.push(covAmp / (stop - start) );
+      ampListName.push(idname);
+
   }
-  return ampList;
+  return [ampList, ampListName];
 };
 
 export { covDepth, snpMethod, mappedReads, amplicons };

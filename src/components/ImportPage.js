@@ -17,6 +17,7 @@ import { sampleConsensus, sampleConsensusMetrics } from "../util/SampleUtil";
 import NegativeControlContext from "../context/NegativeControlContext";
 import SampleContext from "../context/SampleContext";
 import Aioli from "@biowasm/aioli";
+import { curveBumpX } from "d3";
 
 const ImportPage = () => {
   const { negativeControl, dispatch } = useContext(NegativeControlContext);
@@ -97,20 +98,32 @@ const ImportPage = () => {
   };
 
   const getAmplicons = async (mountedFiles, fileHandle, CLI, articV) => {
-    const ampList = await amplicons(mountedFiles, fileHandle, CLI, articV);
+    const [ampList, ampListName] = await amplicons(mountedFiles, fileHandle, CLI, articV);
+    const detectedAmplicons = Array.from(ampList).map((ele, index) => [ele, ampListName[index]])
+      .filter((ele) => parseFloat(ele[0]) >= 0.4)
+      .map((ele) => ele[1]);
     dispatch({
       type: "ADD_AMPLICONS",
       name: fileHandle.name,
       amplicons: ampList,
+      ampLabels: ampListName,
+      detectedAmplicons: detectedAmplicons
     });
   };
   const generateNCMetrics = async (fileHandle, dispatch, articV) => {
     let CLI = await new Aioli(["samtools/1.10", "ivar/1.3.1", "grep/3.7"]);
     const mountedFiles = await CLI.mount([fileHandle]);
-    getCoverage(mountedFiles, fileHandle, CLI);
-    getSnp(mountedFiles, fileHandle, CLI);
-    getMappedReads(mountedFiles, fileHandle, CLI);
-    getAmplicons(mountedFiles, fileHandle, CLI, articV);
+    const cov = getCoverage(mountedFiles, fileHandle, CLI);
+    const snp = getSnp(mountedFiles, fileHandle, CLI);
+    const map = getMappedReads(mountedFiles, fileHandle, CLI);
+    const amp = getAmplicons(mountedFiles, fileHandle, CLI, articV);
+    await Promise.all([cov, snp, map, amp]);
+    dispatch({
+      type: "FINISH_NC",
+      name: fileHandle.name,
+      comments: "Done",
+    });    
+    
   };
 
   const getSampleConsensus = async (mountedFiles, fileHandle, CLI) => {
@@ -179,30 +192,28 @@ const ImportPage = () => {
     mountedFiles,
     fileHandle,
     CLI,
-    articV,
-    isSample
-  ) => {
-    const ampList = await amplicons(
+    articV  ) => {
+    const [ampList, ampListName] = await amplicons(
       mountedFiles,
       fileHandle,
       CLI,
       articV,
-      isSample
     );
-    const missingAmplicons = Array.from(ampList)
-      .filter((ele) => parseFloat(ele.coverage) < 0.4)
-      .map((ele) => ele.idname);
+    const missingAmplicons = Array.from(ampList).map((ele, index) => [ele, ampListName[index]])
+      .filter((ele) => parseFloat(ele[0]) < 0.4)
+      .map((ele) => ele[1]);
+   
     sampleDispatch({
       type: "EDIT_SAMPLE",
       name: fileHandle.name,
-      updates: { amplicons: ampList, missingAmplicons },
+      updates: { amplicons: ampList, missingAmplicons: missingAmplicons, ampLabels: ampListName },
     });
   };
   const generateSampleMetrics = async (fileHandle, articV) => {
     let CLI = await new Aioli(["samtools/1.10", "ivar/1.3.1", "grep/3.7"]);
     const mountedFiles = await CLI.mount([fileHandle]);
     const cov = getSampleConsensus(mountedFiles, fileHandle, CLI);
-    const amp = getSampleAmplicons(mountedFiles, fileHandle, CLI, articV, true);
+    const amp = getSampleAmplicons(mountedFiles, fileHandle, CLI, articV);
     const map = getSampleMappedReads(mountedFiles, fileHandle, CLI);
     await Promise.all([cov, map, amp]);
     sampleDispatch({
