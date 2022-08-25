@@ -177,6 +177,13 @@ const ImportPage = () => {
   };
 
   const getSampleMappedReads = async (mountedFiles, fileHandle, CLI) => {
+    sampleDispatch({
+      type: "EDIT_SAMPLE",
+      name: fileHandle.name,
+      updates: {
+        comments: "Calculating mapped reads",
+      },
+    });     
     const [properReads, onefoureight, totalReads] = await mappedReads(
       mountedFiles,
       fileHandle,
@@ -195,6 +202,13 @@ const ImportPage = () => {
     fileHandle,
     CLI,
     articV  ) => {
+      sampleDispatch({
+        type: "EDIT_SAMPLE",
+        name: fileHandle.name,
+        updates: {
+          comments: "Calculating amplicons",
+        },
+      });       
     const [ampList, ampListName] = await amplicons(
       mountedFiles,
       fileHandle,
@@ -214,7 +228,8 @@ const ImportPage = () => {
   const generateSampleMetrics = async (fileHandle, articV, subsample= true ) => {
     let CLI = await new Aioli(["samtools/1.10", "ivar/1.3.1", "grep/3.7"]);
     const mountedFiles = await CLI.mount([fileHandle]);
-    const amp = getSampleAmplicons(mountedFiles, fileHandle, CLI, articV);
+    const amp = await getSampleAmplicons(mountedFiles, fileHandle, CLI, articV);
+    await Promise.all([cov, map, amp]);   
     const map = getSampleMappedReads(mountedFiles, fileHandle, CLI);
     let cov = ''; 
     if (subsample) {       
