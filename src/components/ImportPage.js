@@ -6,6 +6,7 @@ import {
   CardContent,
   Button,
   Grid,
+  FormControlLabel, FormGroup, Switch
 } from "@mui/material/";
 import {
   covDepth,
@@ -17,12 +18,12 @@ import { sampleConsensus, sampleConsensusMetrics } from "../util/SampleUtil";
 import NegativeControlContext from "../context/NegativeControlContext";
 import SampleContext from "../context/SampleContext";
 import Aioli from "@biowasm/aioli";
-import { curveBumpX } from "d3";
 
 const ImportPage = () => {
   const { negativeControl, dispatch } = useContext(NegativeControlContext);
   const { Sample, sampleDispatch } = useContext(SampleContext);
   const [articV, setArticV] = useState("nCov-2019.v4.1.insert.bed");
+  const [subsampling, setSubsampling] = useState(true);
 
   const submitControl = (event) => {
     const negControlFile = event.target.files[0];
@@ -46,7 +47,7 @@ const ImportPage = () => {
         file: row,
       });
       // Send off for processing
-      generateSampleMetrics(row, articV);
+      generateSampleMetrics(row, articV, subsampling);
     });
   };
 
@@ -126,7 +127,7 @@ const ImportPage = () => {
     
   };
 
-  const getSampleConsensus = async (mountedFiles, fileHandle, CLI) => {
+  const getSampleConsensus = async (mountedFiles, fileHandle, CLI, subsampleRatio) => {
     sampleDispatch({
       type: "EDIT_SAMPLE",
       name: fileHandle.name,
@@ -134,7 +135,7 @@ const ImportPage = () => {
         comments: "Generating consensus",
       },
     });
-    const fastaOut = await sampleConsensus(mountedFiles, fileHandle, CLI);
+    const fastaOut = await sampleConsensus(mountedFiles, fileHandle, CLI, subsampleRatio);
     sampleDispatch({
       type: "EDIT_SAMPLE",
       name: fileHandle.name,
@@ -186,6 +187,7 @@ const ImportPage = () => {
       name: fileHandle.name,
       updates: { properReads, onefoureight, totalReads },
     });
+    return [properReads, onefoureight, totalReads]
   };
 
   const getSampleAmplicons = async (
@@ -209,12 +211,20 @@ const ImportPage = () => {
       updates: { amplicons: ampList, missingAmplicons: missingAmplicons, ampLabels: ampListName },
     });
   };
-  const generateSampleMetrics = async (fileHandle, articV) => {
+  const generateSampleMetrics = async (fileHandle, articV, subsample= true ) => {
     let CLI = await new Aioli(["samtools/1.10", "ivar/1.3.1", "grep/3.7"]);
     const mountedFiles = await CLI.mount([fileHandle]);
-    const cov = getSampleConsensus(mountedFiles, fileHandle, CLI);
     const amp = getSampleAmplicons(mountedFiles, fileHandle, CLI, articV);
     const map = getSampleMappedReads(mountedFiles, fileHandle, CLI);
+    let cov = ''; 
+    if (subsample) {       
+        const [properReads, onefoureight, totalReads] = await map
+        const subSampleRatio = 30000 / onefoureight
+        console.log('SUBSAMPLE ratio' , subSampleRatio)
+        cov = subSampleRatio < 1 ? getSampleConsensus(mountedFiles, fileHandle, CLI, subSampleRatio ) : getSampleConsensus(mountedFiles, fileHandle, CLI);
+    } else { 
+      cov = getSampleConsensus(mountedFiles, fileHandle, CLI);
+    }
     await Promise.all([cov, map, amp]);
     sampleDispatch({
       type: "EDIT_SAMPLE",
@@ -229,6 +239,10 @@ const ImportPage = () => {
     const articVersion = e.target.value;
     setArticV(articVersion);
   };
+
+  const handleSubsample = (e) => {
+    setSubsampling(e.target.checked);
+  }
 
   return (
     <Container maxWidth="md" data-testid={`Import-page`}>
@@ -259,6 +273,11 @@ const ImportPage = () => {
                 <option value="nCov-2019.v2.insert.bed">ARTIC-V2</option>
                 <option value="nCov-2019.v1.insert.bed">ARTIC-V1</option>
               </select>
+            </Grid>
+            <Grid item xs={7}>
+              <FormGroup>
+                <FormControlLabel control={<Switch onChange={(e) => handleSubsample(e)} defaultChecked />} label="Subsampling (for consensus)" />
+              </FormGroup>
             </Grid>
             <Grid item xs={7}>
               <form onChange={(e) => submitControl(e)}>

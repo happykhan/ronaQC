@@ -23,7 +23,6 @@ const SampleReportPage = () => {
       name: ele.name.replace(/\.mapped\.bam/, "").replace(/\.bam/, ""),
       coverage: ele.amplicons.map((cov) => (cov ? cov : 0)),
     }));
-    console.log('SAMPLE REPORT', amplicons)
     const randomLabelArray = () => {
       return Array.from({ length: 97 }, (x,y) => `amp_${y}` );
     };

@@ -2,15 +2,23 @@ export const sampleConsensus = async (
   f,
   fileName,
   CLI,
+  subsampleRatio, 
   ivarMinFreqThreshold = 0.75,
   ivarMinDepth = 10,
   ivarMinVariantQuality = 20
 ) => {
   // Calculate the consensus
-  const response = await fetch("MN908947.3.fasta");
+  const response = await fetch("/MN908947.3.fasta");
   const respText = await response.text();
   await CLI.fs.writeFile("ref.fasta", `${respText}`);
   // You can't seem to have multiple padding spaces i.e. no '  ' only ' '
+  if (subsampleRatio) { 
+    await CLI.exec(
+      `samtools view ${f} -b -s ${subsampleRatio} -o ${fileName.name}.subsample.bam`
+    );
+    console.log('Subsampled')
+    f = `${fileName.name}.subsample.bam`
+  }
   let samOutput = await CLI.exec(
     `samtools mpileup -A -d 0 -B -Q 0 ${f} -o ${fileName.name}.pileup --reference ref.fasta`
   );
