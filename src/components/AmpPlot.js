@@ -1,9 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-const randomCoverageArray = () => {
-  return Array.from({ length: 97 }, () => Math.floor(Math.random() * 1000));
-};
+
 
 const getMax = (ampliconObj) => {
   let values = ampliconObj.map((o) => d3.max(o.coverage));
@@ -11,36 +9,21 @@ const getMax = (ampliconObj) => {
   return [d3.max(values)];
 };
 
-const AmpPlot = ({ amplicons }) => {
+const AmpPlot = ({ amplicons, labels }) => {
   const height = 400;
   const width = 800;
   const margin = 100;
   const svgRef = useRef();
-  console.log(amplicons);
-  // const ampliconsRand = [
-  //   { name: "1.mapped.bam", coverage: randomCoverageArray() },
-  //   { name: "2.mapped.bam", coverage: randomCoverageArray() },
-  //   { name: "3.mapped.bam", coverage: randomCoverageArray() },
-  //   { name: "4.mapped.bam", coverage: randomCoverageArray() },
-  //   { name: "5.mapped.bam", coverage: randomCoverageArray() },
-  //   { name: "6.mapped.bam", coverage: randomCoverageArray() },
-  //   { name: "7.mapped.bam", coverage: randomCoverageArray() },
-  //   { name: "8.mapped.bam", coverage: randomCoverageArray() },
-  // ];
 
-  const indexList = Array.from({ length: 97 }, (ele, index) =>
-    (index + 1).toString()
-  );
-  const maxIndex = 97;
-  const maxValue = amplicons.length;
-  //  const maxCoverage = getMax(amplicons);
-  const maxCoverage = 1;
+  // amplicons = ampliconsRand
+  const indexList = labels ? labels :  Array.from({ length: amplicons[0].coverage.length }, (ele, index) =>
+  (index).toString())
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);
     const plotHeight = height - margin;
     const plotWidth = width - margin;
-
+    const maxCoverage = getMax(amplicons);
     // Create X scale
     const xScale = d3
       .scaleBand()
@@ -66,7 +49,7 @@ const AmpPlot = ({ amplicons }) => {
     let ampl = amplicons.map((ele) =>
       ele.coverage.map((cov, index) => ({
         name: ele.name,
-        index: index.toString(),
+        index: indexList[index],
         cov,
       }))
     );
@@ -74,7 +57,6 @@ const AmpPlot = ({ amplicons }) => {
       (previousValue, currentValue) => previousValue.concat(currentValue),
       []
     );
-
     svg.selectAll("rect").remove();
 
     svg
@@ -100,16 +82,19 @@ const AmpPlot = ({ amplicons }) => {
       .style("stroke", "none")
       .style("opacity", 0.8);
 
-    const xAxis = d3.axisBottom(xScale);
+    const xAxis = d3.axisBottom(xScale)
+    .tickValues(xScale.domain().filter(function(d,i){ return !(i%5)}));;
     svg
       .select(".x-axis")
       .style("transform", `translateY(${plotHeight}px)`)
       .call(xAxis)
       .selectAll("text")
-      .style("text-anchor", "end")
+      .attr("transform", "rotate(-90) translate(0, -5)")
+    .style("text-anchor", "end")
       .attr("dx", "-.8em")
-      .attr("dy", ".15em")
-      .attr("transform", "rotate(-90)");
+      .attr("dy", ".15em");
+
+      
     const yAxis = d3.axisLeft(yScale);
     svg
       .select(".y-axis")
@@ -120,7 +105,7 @@ const AmpPlot = ({ amplicons }) => {
       .append("text")
       .attr(
         "transform",
-        "translate(" + plotWidth / 2 + " ," + (plotHeight + 60) + ")"
+        "translate(" + margin /2  + " ," + (plotHeight + 60) + ")"
       )
       .style("text-anchor", "middle")
       .text("Amplicon");

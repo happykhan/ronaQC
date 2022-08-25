@@ -11,13 +11,16 @@ const negativeControlReducer = (state, action) => {
     case "ADD_SNP_COUNT":
       return { ...state, snpCount: action.snpCount };
     case "ADD_AMPLICONS":
-      return { ...state, amplicons: action.amplicons };
+      return { ...state, amplicons: action.amplicons, ampLabels: action.ampLabels,
+        detectedAmplicons: action.detectedAmplicons };
     case "ADD_PROPER_MAPPED_READS":
       return { ...state, properReads: action.properReads };
     case "ADD_MAPPED_READS":
       return { ...state, onefoureight: action.onefoureight };
     case "ADD_TOTAL_READS":
       return { ...state, totalReads: action.totalReads };
+      case "FINISH_NC":
+        return { ...state, comments: action.comments };      
     default:
       return state;
   }

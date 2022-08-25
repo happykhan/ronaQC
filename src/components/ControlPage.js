@@ -41,13 +41,13 @@ const SummaryTable = (control) => {
           </TableCell>
           <TableCell>
             Detected amplicons{" "}
-            {(control.amplicons ? control.amplicons.length : 0) > 1 && (
+            {(control.detectedAmplicons ? control.detectedAmplicons.length : 0) > 1 && (
               <ErrorIcon sx={{ color: "red" }} />
             )}{" "}
-            {(control.amplicons ? control.amplicons.length : 0) == 1 && (
+            {(control.detectedAmplicons ? control.detectedAmplicons.length : 0) == 1 && (
               <WarningIcon sx={{ color: "orange" }} />
             )}
-            {(control.amplicons ? control.amplicons.length : 0) == 0 && (
+            {(control.detectedAmplicons ? control.detectedAmplicons.length : 0) == 0 && (
               <CheckCircleIcon sx={{ color: "green" }} />
             )}
           </TableCell>
@@ -72,9 +72,9 @@ const SummaryTable = (control) => {
             / {control.totalReads ? control.totalReads : "Unknown total reads"}{" "}
           </TableCell>
           <TableCell>
-            {control.amplicons
-              ? control.amplicons.length > 0
-                ? control.amplicons.join(", ")
+            {control.detectedAmplicons
+              ? control.detectedAmplicons.length > 0
+                ? control.detectedAmplicons.join(", ")
                 : "No amplicons found"
               : "Unknown amplicons"}
           </TableCell>
@@ -91,7 +91,7 @@ const ControlPage = () => {
       <Card>
         <CardContent>
           <Typography variant="h3" my={3} gutterBottom>
-            Control report
+            Control report {negativeControl.comments && `- ${negativeControl.comments}`}
           </Typography>
           {negativeControl.name ? (
             <Typography variant="body1">

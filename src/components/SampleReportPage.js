@@ -16,14 +16,31 @@ import AmpPlot from "./AmpPlot";
 
 const SampleReportPage = () => {
   const { samples } = useContext(SampleContext);
+  
   const amplicons = samples
     .filter((ele) => !!ele.amplicons)
     .map((ele) => ({
       name: ele.name.replace(/\.mapped\.bam/, "").replace(/\.bam/, ""),
-      coverage: ele.amplicons.map((cov) => ({
-        coverage: cov.coverage ? cov.coverage : 0,
-      })),
+      coverage: ele.amplicons.map((cov) => (cov ? cov : 0)),
     }));
+    console.log('SAMPLE REPORT', amplicons)
+    const randomLabelArray = () => {
+      return Array.from({ length: 97 }, (x,y) => `amp_${y}` );
+    };
+
+    const randomCoverageArray = () => {
+      return Array.from({ length: 97 }, () => Math.floor(Math.random() * 1000));
+    };
+    const ampliconsRand = [
+      { name: "1.mapped.bam", coverage: randomCoverageArray() },
+      { name: "2.mapped.bam", coverage: randomCoverageArray() },
+      { name: "3.mapped.bam", coverage: randomCoverageArray() },
+      { name: "4.mapped.bam", coverage: randomCoverageArray() },
+      { name: "5.mapped.bam", coverage: randomCoverageArray() },
+      { name: "6.mapped.bam", coverage: randomCoverageArray() },
+      { name: "7.mapped.bam", coverage: randomCoverageArray() },
+      { name: "8.mapped.bam", coverage: randomCoverageArray() },
+    ];    
 
   const SummaryTable = (tableSamples) => {
     const { samples } = tableSamples;
@@ -99,7 +116,7 @@ const SampleReportPage = () => {
             Sample report
           </Typography>
           {samples.length > 0 ? (
-            <SummaryTable samples={samples} />
+            <SummaryTable samples={samples}/>
           ) : (
             <Typography variant="body1">
               You have no sample files loaded. Please add files under Import
@@ -110,8 +127,8 @@ const SampleReportPage = () => {
 
       <Card>
         <CardContent>
-          {amplicons.length > 0 && <AmpPlot amplicons={amplicons} />}
-        </CardContent>
+          {amplicons.length > 0 && <AmpPlot amplicons={amplicons} labels={samples[0].ampLabels}/>}
+        </CardContent>   
       </Card>
     </Container>
   );

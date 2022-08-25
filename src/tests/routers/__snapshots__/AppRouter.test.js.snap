@@ -105,6 +105,26 @@ exports[`should render Full site (import page) correctly 1`] = `
         <div
           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-7 css-uqwprf-MuiGrid-root"
         >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-19mlci9-MuiTypography-root"
+          >
+            Don't have any data? Click the button below for sample data with sequenced controls:
+          </p>
+          <a
+            class="MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root  css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
+            download="ronaqc_small_test.zip"
+            href="/ronaqc_small_test.zip"
+            tabindex="0"
+          >
+            Download sample data
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </a>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-7 css-uqwprf-MuiGrid-root"
+        >
           <button
             class="MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root Mui-disabled  css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
             disabled=""
