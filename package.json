@@ -6,6 +6,7 @@
   "license": "GPLv3",
   "scripts": {
     "serve": "webpack serve --open --mode development",
+    "develop": "webpack serve --open --mode development",
     "build": "webpack --mode production",
     "test": "jest --transformIgnorePatterns  \"/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates|@biowasm)\""
   },

@@ -15,11 +15,9 @@ const AmpPlot = ({ amplicons, labels }) => {
   const margin = 100;
   const svgRef = useRef();
 
-
   // amplicons = ampliconsRand
   const indexList = labels ? labels :  Array.from({ length: amplicons[0].coverage.length }, (ele, index) =>
   (index).toString())
-  
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);
