@@ -68,7 +68,7 @@ const mappedReads = async (f, fileName, CLI) => {
 };
 
 const amplicons = async (f, fileName, CLI, articV) => {
-  const bedFileLoc = await fetch("primer_schemes/" + articV);
+  const bedFileLoc = await fetch("/primer_schemes/" + articV);
   const depthOutput = await CLI.exec(`samtools depth -a ${f}`);
   const blankCoverageArray = depthOutput
     .split("\n")
