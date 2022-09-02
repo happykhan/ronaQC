@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
-
-
+import { colorLegend } from "./colorLegend";
 
 const getMax = (ampliconObj) => {
   let values = ampliconObj.map((o) => d3.max(o.coverage));
@@ -16,13 +15,17 @@ const AmpPlot = ({ amplicons, labels }) => {
   const svgRef = useRef();
 
   // amplicons = ampliconsRand
-  const indexList = labels ? labels :  Array.from({ length: amplicons[0].coverage.length }, (ele, index) =>
-  (index).toString())
+  const indexList = labels
+    ? labels
+    : Array.from({ length: amplicons[0].coverage.length }, (ele, index) =>
+        index.toString()
+      );
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);
     const plotHeight = height - margin;
     const plotWidth = width - margin;
+    console.log(amplicons);
     const maxCoverage = getMax(amplicons);
     // Create X scale
     const xScale = d3
@@ -82,19 +85,21 @@ const AmpPlot = ({ amplicons, labels }) => {
       .style("stroke", "none")
       .style("opacity", 0.8);
 
-    const xAxis = d3.axisBottom(xScale)
-    .tickValues(xScale.domain().filter(function(d,i){ return !(i%5)}));;
+    const xAxis = d3.axisBottom(xScale).tickValues(
+      xScale.domain().filter(function (d, i) {
+        return !(i % 5);
+      })
+    );
     svg
       .select(".x-axis")
       .style("transform", `translateY(${plotHeight}px)`)
       .call(xAxis)
       .selectAll("text")
       .attr("transform", "rotate(-90) translate(0, -5)")
-    .style("text-anchor", "end")
+      .style("text-anchor", "end")
       .attr("dx", "-.8em")
       .attr("dy", ".15em");
 
-      
     const yAxis = d3.axisLeft(yScale);
     svg
       .select(".y-axis")
@@ -105,10 +110,22 @@ const AmpPlot = ({ amplicons, labels }) => {
       .append("text")
       .attr(
         "transform",
-        "translate(" + margin /2  + " ," + (plotHeight + 60) + ")"
+        "translate(" + margin / 2 + " ," + (plotHeight + 60) + ")"
       )
       .style("text-anchor", "middle")
       .text("Amplicon");
+    svg
+      .append("g")
+      .attr("class", "legend")
+      .attr("transform", `translate(${plotWidth + margin / 2},50)`)
+      .style("font-size", "12px")
+      .call(colorLegend, {
+        covScale,
+        circleRadius: 5,
+        spacing: 20,
+        textOffset: 20,
+        maxCoverage,
+      });
   }, [amplicons]);
 
   return (
