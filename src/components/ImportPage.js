@@ -112,7 +112,7 @@ const ImportPage = () => {
     });
   };
   const generateNCMetrics = async (fileHandle, dispatch, articV) => {
-    let CLI = await new Aioli(["samtools/1.10", "ivar/1.3.1", "grep/3.7"]);
+    let CLI = await new Aioli(["samtools/1.10", "ivar/1.3.1"]);
     const mountedFiles = await CLI.mount([fileHandle]);
     const cov = getCoverage(mountedFiles, fileHandle, CLI);
     const snp = getSnp(mountedFiles, fileHandle, CLI);
@@ -226,7 +226,7 @@ const ImportPage = () => {
     });
   };
   const generateSampleMetrics = async (fileHandle, articV, subsample= true ) => {
-    let CLI = await new Aioli(["samtools/1.10", "ivar/1.3.1", "grep/3.7"]);
+    let CLI = await new Aioli(["samtools/1.10", "ivar/1.3.1"]);
     const mountedFiles = await CLI.mount([fileHandle]);
     const amp = await getSampleAmplicons(mountedFiles, fileHandle, CLI, articV);
     await Promise.all([cov, map, amp]);   

@@ -25,7 +25,7 @@ export const sampleConsensus = async (
   samOutput = await CLI.exec(
     `ivar consensus -p out ${fileName.name}.pileup -m ${ivarMinDepth} -q ${ivarMinVariantQuality} -t ${ivarMinFreqThreshold} -r ref.fasta`
   );
-  const fastaOut = await CLI.exec("grep .* out.fa");
+  const fastaOut = await CLI.cat("out.fa");
   return fastaOut;
 };
 
