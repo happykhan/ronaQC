@@ -130,7 +130,7 @@ const AmpPlot = ({ amplicons, labels }) => {
 
   return (
     <div>
-      <svg ref={svgRef} height={height} width={width} overflow="visible">
+      <svg ref={svgRef} height={height} width={width} overflow="visible" xmlns="http://www.w3.org/2000/svg">
         <g className="x-axis" />
         <g className="y-axis" />
       </svg>
