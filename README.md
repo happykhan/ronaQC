@@ -24,7 +24,7 @@ netlify deploy --prod
 
 There are two datasets to demonstrate/test ronaQC:
 
-## A very simple dataset (30MB).
+## A very simple dataset (30MB)
 Test data is available here: https://ronaqc.netlify.app/ronaqc_small_test.zip 
 
 This includes:
