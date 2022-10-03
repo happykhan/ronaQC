@@ -22,6 +22,21 @@ netlify deploy --prod
 
 # Test data
 
+There are two datasets to demonstrate/test ronaQC:
+
+## A very simple dataset (30MB).
+This includes mapped reads of three sequenced controls of varying quality, and mapped reads of two genuine SARSCOV2 samples. https://ronaqc.netlify.app/ronaqc_small_test.zip 
+
+## A more exhaustive dataset (1GB)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7018405.svg)](https://doi.org/10.5281/zenodo.7018405) Test data is available here: https://zenodo.org/record/7018405
+
+This includes:
+* SARS-CoV-2 sequenced reads from major VOCs. 
+* SARS-CoV-2 sequenced reads from samples that are known to have failed (for different reasons). 
+* The test data from above, with one additional sample.  
+
+VOC and failed QC data are taken from  [CDCgov/datasets-sars-cov-2](https://github.com/CDCgov/datasets-sars-cov-2). 
+
+
 
  
