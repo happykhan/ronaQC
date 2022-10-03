@@ -1,4 +1,4 @@
-# Introduction
+# Contributions welcome!
 
 First off, thank you for considering to contribe to RonaQC.
 RonaQC is an open source project and open to pull requests for documentation or code.
