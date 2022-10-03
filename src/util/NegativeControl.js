@@ -41,7 +41,7 @@ const snpMethod = async (
   samOutput = await CLI.exec(
     `ivar variants -p out test.pileup -m ${ivarMinDepth} -q ${ivarMinVariantQuality} -t ${ivarMinFreqThreshold} -r ref.fasta`
   );
-  const ivarOut = await CLI.exec("grep .* out.tsv");
+  const ivarOut = await CLI.cat("out.tsv");
   const snpList = ivarOut
     .split(/\r?\n/)
     .map((element) => element.split(/\t/))
