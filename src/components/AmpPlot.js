@@ -1,12 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { colorLegend } from "./colorLegend";
+import { saveAs } from 'file-saver';
+import { getSVGString, svgString2Image } from '../util/ExportPlot'
 
 const getMax = (ampliconObj) => {
   let values = ampliconObj.map((o) => d3.max(o.coverage));
 
   return [d3.max(values)];
 };
+
 
 const AmpPlot = ({ amplicons, labels }) => {
   const height = 400;
@@ -23,6 +26,7 @@ const AmpPlot = ({ amplicons, labels }) => {
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);
+
     const plotHeight = height - margin;
     const plotWidth = width - margin;
     console.log(amplicons);
@@ -126,7 +130,27 @@ const AmpPlot = ({ amplicons, labels }) => {
         textOffset: 20,
         maxCoverage,
       });
+
+      d3.select('#saveButton').on('click', function(){
+        var svgString = getSVGString(svg.node());
+        svgString2Image( svgString, 2*width, 2*height, 'png', save ); // passes Blob and filesize String to the callback
+      
+        function save( dataBlob, filesize ){
+          saveAs( dataBlob, 'sampleReport.png' ); // FileSaver.js function
+        }
+      });
+
+      d3.select('#saveSvgButton').on('click', function(){
+        var svgString = getSVGString(svg.node());
+        console.log(svgString)
+        var blob = new Blob([svgString], {type: "image/svg+xml"});  
+        saveAs(blob, "sampleReport.svg");        
+      });      
+
+
   }, [amplicons]);
+
+
 
   return (
     <div>
@@ -135,6 +159,8 @@ const AmpPlot = ({ amplicons, labels }) => {
         <g className="y-axis" />
       </svg>
       <br />
+      <button id='saveButton'>Save as PNG</button>
+      <button id='saveSvgButton'>Save as SVG</button>
     </div>
   );
 };

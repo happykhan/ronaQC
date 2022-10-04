@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
+import { getSVGString, svgString2Image } from '../util/ExportPlot'
+import { saveAs } from 'file-saver';
 
 const getCovAve = (coverage, perChunk = 100) => {
   const result = coverage.reduce((resultArray, item, index) => {
@@ -104,6 +106,21 @@ const Covplot = ({ coverage }) => {
       )
       .style("text-anchor", "middle")
       .text("Coverage");
+    d3.select('#saveButton').on('click', function(){
+      var svgString = getSVGString(svg.node());
+      svgString2Image( svgString, 2*width, 2*height, 'png', save ); // passes Blob and filesize String to the callback
+    
+      function save( dataBlob, filesize ){
+        saveAs( dataBlob, 'Save as .png' ); // FileSaver.js function
+      }
+    });
+    d3.select('#saveSvgButton').on('click', function(){
+      var svgString = getSVGString(svg.node());
+      console.log(svgString)
+      var blob = new Blob([svgString], {type: "image/svg+xml"});  
+      saveAs(blob, "sampleReport.svg");        
+    });      
+
   }, [coverageRand]);
 
   return (
@@ -113,6 +130,8 @@ const Covplot = ({ coverage }) => {
         <g className="y-axis" />
       </svg>
       <br />
+      <button id='saveButton'>Save as PNG</button>
+      <button id='saveSvgButton'>Save as SVG</button>
     </div>
   );
 };
