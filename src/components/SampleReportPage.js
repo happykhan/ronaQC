@@ -44,6 +44,8 @@ const SampleReportPage = () => {
     { name: "8.mapped.bam", coverage: randomCoverageArray() },
   ];
 
+  const SaveList:
+
   const SummaryTable = (tableSamples) => {
     const { samples } = tableSamples;
 
@@ -59,6 +61,7 @@ const SampleReportPage = () => {
             <TableCell>Mapped reads (Best/Well/Total)</TableCell>
             <TableCell>Missing amplicons</TableCell>
             <TableCell>Comments</TableCell>
+            <TableCell>Download consensus</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -103,6 +106,10 @@ const SampleReportPage = () => {
                 {element.comments == "Done" ? "" : <CircularProgress />}
                 {element.comments ? element.comments : "No comments"}
               </TableCell>
+              <TableCell>
+                
+                {element.consensusFasta ? element.consensusFasta : "No comments"}
+              </TableCell>              
             </TableRow>
           ))}
         </TableBody>

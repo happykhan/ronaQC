@@ -160,6 +160,7 @@ const ImportPage = () => {
         updates: {
           consensusLength,
           ambigiousBasesCount,
+          consensusFasta : fastaString,
           longestNRun,
           highQCpass: highQCpassString,
           baseQCpass: baseQCpassString,

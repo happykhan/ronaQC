@@ -29,7 +29,6 @@ const AmpPlot = ({ amplicons, labels }) => {
 
     const plotHeight = height - margin;
     const plotWidth = width - margin;
-    console.log(amplicons);
     const maxCoverage = getMax(amplicons);
     // Create X scale
     const xScale = d3
@@ -142,7 +141,6 @@ const AmpPlot = ({ amplicons, labels }) => {
 
       d3.select('#saveSvgButton').on('click', function(){
         var svgString = getSVGString(svg.node());
-        console.log(svgString)
         var blob = new Blob([svgString], {type: "image/svg+xml"});  
         saveAs(blob, "sampleReport.svg");        
       });      
