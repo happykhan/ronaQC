@@ -9,10 +9,12 @@ import {
   TableBody,
   TableHead,
   TableCell,
+  Button,
   TableRow,
 } from "@mui/material/";
 import SampleContext from "../context/SampleContext";
 import AmpPlot from "./AmpPlot";
+import { saveAs } from "file-saver";
 
 const SampleReportPage = () => {
   const { samples } = useContext(SampleContext);
@@ -44,7 +46,12 @@ const SampleReportPage = () => {
     { name: "8.mapped.bam", coverage: randomCoverageArray() },
   ];
 
-  const SaveList:
+  const consensusDownload = (fastaString, name) => {
+    var blob = new Blob([fastaString.replaceAll(",", "\n")], {
+      type: "text/plain",
+    });
+    saveAs(blob, name + ".fasta");
+  };
 
   const SummaryTable = (tableSamples) => {
     const { samples } = tableSamples;
@@ -61,7 +68,6 @@ const SampleReportPage = () => {
             <TableCell>Mapped reads (Best/Well/Total)</TableCell>
             <TableCell>Missing amplicons</TableCell>
             <TableCell>Comments</TableCell>
-            <TableCell>Download consensus</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -105,11 +111,19 @@ const SampleReportPage = () => {
               <TableCell>
                 {element.comments == "Done" ? "" : <CircularProgress />}
                 {element.comments ? element.comments : "No comments"}
+                {element.consensusFasta && (
+                  <Button
+                    variant="text"
+                    size="small"
+                    color="success"
+                    onClick={() =>
+                      consensusDownload(element.consensusFasta, element.name)
+                    }
+                  >
+                    Download consensus
+                  </Button>
+                )}
               </TableCell>
-              <TableCell>
-                
-                {element.consensusFasta ? element.consensusFasta : "No comments"}
-              </TableCell>              
             </TableRow>
           ))}
         </TableBody>
