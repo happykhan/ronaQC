@@ -3,6 +3,7 @@ import { Route, Routes, BrowserRouter } from "react-router-dom";
 import ControlPage from "../components/ControlPage";
 import SampleReportPage from "../components/SampleReportPage";
 import ImportPage from "../components/ImportPage";
+import CreatePage from "../components/CreatePage";
 import HelpPage from "../components/HelpPage";
 import NotFoundPage from "../components/NotFoundPage";
 import Layout from "../components/Layout";
@@ -23,6 +24,8 @@ const AppRouter = () => {
               <Route path="/" element={<ImportPage />} />
               <Route path="control" element={<ControlPage />} />
               <Route path="report" element={<SampleReportPage />} />
+              <Route path="create" element={<CreatePage />} />
+
               <Route path="help" element={<HelpPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>

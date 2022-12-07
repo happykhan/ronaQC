@@ -27,6 +27,7 @@ const navLinks = [
   { name: "Import", href: "/" },
   { name: "Control report", href: "/control/" },
   { name: "Sample report", href: "/report/" },
+  { name: "Create data", href: "/create/" },
   { name: "Help", href: "/help/" },
 ];
 
