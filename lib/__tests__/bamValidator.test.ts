@@ -11,9 +11,9 @@ function createFile(name: string, content: Uint8Array, size?: number): File {
 }
 
 describe('validateBAM', () => {
-  it('accepts a valid BAM file', async () => {
-    // BAM magic bytes: "BAM\1"
-    const content = new Uint8Array([0x42, 0x41, 0x4d, 0x01, 0, 0, 0, 0])
+  it('accepts a valid BAM file (gzip/BGZF magic bytes)', async () => {
+    // BAM files are BGZF-compressed, so first bytes are gzip magic: 0x1f 0x8b
+    const content = new Uint8Array([0x1f, 0x8b, 0x08, 0x04, 0, 0, 0, 0])
     const file = createFile('test.bam', content)
     const result = await validateBAM(file)
     expect(result.valid).toBe(true)
@@ -21,7 +21,7 @@ describe('validateBAM', () => {
   })
 
   it('rejects a file without .bam extension', async () => {
-    const content = new Uint8Array([0x42, 0x41, 0x4d, 0x01])
+    const content = new Uint8Array([0x1f, 0x8b, 0x08, 0x04])
     const file = createFile('test.sam', content)
     const result = await validateBAM(file)
     expect(result.valid).toBe(false)
@@ -37,7 +37,7 @@ describe('validateBAM', () => {
   })
 
   it('rejects files over 2GB', async () => {
-    const content = new Uint8Array([0x42, 0x41, 0x4d, 0x01])
+    const content = new Uint8Array([0x1f, 0x8b, 0x08, 0x04])
     const file = createFile('test.bam', content, 3 * 1024 * 1024 * 1024) // 3GB
     const result = await validateBAM(file)
     expect(result.valid).toBe(false)
@@ -45,7 +45,7 @@ describe('validateBAM', () => {
   })
 
   it('warns for files over 500MB', async () => {
-    const content = new Uint8Array([0x42, 0x41, 0x4d, 0x01])
+    const content = new Uint8Array([0x1f, 0x8b, 0x08, 0x04])
     const file = createFile('test.bam', content, 600 * 1024 * 1024) // 600MB
     const result = await validateBAM(file)
     expect(result.valid).toBe(true)

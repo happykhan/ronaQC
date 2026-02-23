@@ -48,7 +48,7 @@ describe('pipeline', () => {
 
   it('processSample dispatches initial status', async () => {
     const { processSample } = await import('../pipeline')
-    const bamContent = new Uint8Array([0x42, 0x41, 0x4d, 0x01, 0, 0, 0, 0])
+    const bamContent = new Uint8Array([0x1f, 0x8b, 0x08, 0x04, 0, 0, 0, 0])
     const file = new File([bamContent], 'sample.bam')
     const dispatch = vi.fn()
 

@@ -1,4 +1,5 @@
-const BAM_MAGIC = new Uint8Array([0x42, 0x41, 0x4d, 0x01]) // "BAM\1"
+// BAM files are BGZF-compressed, so the first bytes are gzip magic (0x1f, 0x8b)
+const GZIP_MAGIC = [0x1f, 0x8b]
 const MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024 // 2GB
 const WARN_FILE_SIZE = 500 * 1024 * 1024 // 500MB
 
@@ -6,6 +7,20 @@ export interface ValidationResult {
   valid: boolean
   warning?: string
   error?: string
+}
+
+async function readFileHeader(file: File, bytes: number): Promise<Uint8Array> {
+  const slice = file.slice(0, bytes)
+  try {
+    return new Uint8Array(await slice.arrayBuffer())
+  } catch {
+    return new Promise<Uint8Array>((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(new Uint8Array(reader.result as ArrayBuffer))
+      reader.onerror = () => reject(reader.error)
+      reader.readAsArrayBuffer(slice)
+    })
+  }
 }
 
 export async function validateBAM(file: File): Promise<ValidationResult> {
@@ -25,42 +40,23 @@ export async function validateBAM(file: File): Promise<ValidationResult> {
     }
   }
 
-  // Check BAM magic bytes
+  // Check for BGZF/gzip magic bytes (BAM is BGZF-compressed)
   try {
-    const slice = file.slice(0, 4)
-    let header: Uint8Array
+    const header = await readFileHeader(file, 4)
 
-    if (typeof slice.arrayBuffer === 'function') {
-      try {
-        header = new Uint8Array(await slice.arrayBuffer())
-      } catch {
-        // Fallback: use FileReader for environments where arrayBuffer() fails
-        header = await new Promise<Uint8Array>((resolve, reject) => {
-          const reader = new FileReader()
-          reader.onload = () => resolve(new Uint8Array(reader.result as ArrayBuffer))
-          reader.onerror = () => reject(reader.error)
-          reader.readAsArrayBuffer(slice)
-        })
-      }
-    } else {
-      header = await new Promise<Uint8Array>((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = () => resolve(new Uint8Array(reader.result as ArrayBuffer))
-        reader.onerror = () => reject(reader.error)
-        reader.readAsArrayBuffer(slice)
-      })
-    }
-
-    const isBAM = header.length >= 4 &&
-      header[0] === BAM_MAGIC[0] &&
-      header[1] === BAM_MAGIC[1] &&
-      header[2] === BAM_MAGIC[2] &&
-      header[3] === BAM_MAGIC[3]
-
-    if (!isBAM) {
+    if (header.length < 2) {
       return {
         valid: false,
-        error: `File "${file.name}" is not a valid BAM file (invalid magic bytes).`,
+        error: `File "${file.name}" is empty or too small to be a valid BAM file.`,
+      }
+    }
+
+    const isGzip = header[0] === GZIP_MAGIC[0] && header[1] === GZIP_MAGIC[1]
+
+    if (!isGzip) {
+      return {
+        valid: false,
+        error: `File "${file.name}" is not a valid BAM file (not BGZF-compressed).`,
       }
     }
   } catch {
