@@ -1,46 +1,80 @@
-# ronaQC
+# RonaQC
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/7ee08bfe-aff7-4260-a4c0-498708e5a17b/deploy-status)](https://app.netlify.com/sites/ronaqc/deploys)
+[![CI](https://github.com/happykhan/ronaQC/actions/workflows/ci.yml/badge.svg)](https://github.com/happykhan/ronaQC/actions/workflows/ci.yml)
 
-[![Node.js CI](https://github.com/happykhan/ronaQC/actions/workflows/node.js.yml/badge.svg)](https://github.com/happykhan/ronaQC/actions/workflows/node.js.yml)
+Quality control tool for SARS-CoV-2 sequencing data. RonaQC processes BAM files entirely in the browser using WebAssembly — **no data leaves your computer**.
 
-Source code for web resource, RonaQC. RonaQC accepts mapped SARS-CoV-2 reads (BAM format), generated
-from the SARS-CoV-2 bioinformatic pipelines like ARTIC,
-and any control samples from the respective sequencing run (negative/positive) as input.
-It will then assess the levels of cross contamination and primer contamination in the samples, and determine
-if the samples are reliable for detecting SARS-CoV-2, phylogenetic analysis, and/or submission to public databases.
+## Features
 
-The software is live on https://ronaqc.netlify.app/
+- **Browser-based analysis** — Runs samtools and ivar via WebAssembly (biowasm)
+- **Negative control QC** — SNP detection, genome coverage, mapped reads, amplicon analysis
+- **Sample QC** — Consensus generation, QC thresholds, ambiguous base detection, N-run analysis
+- **Interactive visualizations** — D3.js coverage plots and amplicon heatmaps with tooltips and export
+- **ARTIC primer support** — V1 through V4.1 primer schemes
+- **Optional subsampling** — Subsample to 30K reads for faster consensus generation
+- **Privacy-first** — All processing happens locally in the browser
 
-# Deploy
+## Getting Started
 
-```
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Run tests
+npm test
+
+# Build for production
 npm run build
-netlify deploy --prod
 ```
 
+## Architecture
 
-# Test data
+- **Framework**: Next.js 15 + React 19 + TypeScript
+- **Styling**: Tailwind CSS with GenomicX design tokens
+- **Bioinformatics**: @biowasm/aioli (samtools 1.10 + ivar 1.3.1)
+- **Visualizations**: D3.js v7
+- **Testing**: Vitest + Testing Library + Playwright
+- **Deployment**: Vercel
 
-There are two datasets to demonstrate/test ronaQC:
+## Project Structure
 
-## A very simple dataset (30MB)
-Test data is available here: https://ronaqc.netlify.app/ronaqc_small_test.zip 
+```
+app/           → Next.js pages (import, control, report, help)
+components/    → Reusable UI components
+lib/           → Core logic (pipeline, validators, contexts, types)
+public/        → Reference genome, primer schemes, test data
+e2e/           → Playwright end-to-end tests
+```
 
-This includes:
-* mapped reads of three sequenced controls of varying quality
-* mapped reads of two genuine SARSCOV2 samples. 
+## Testing
 
-## A more exhaustive dataset (1GB)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7018405.svg)](https://doi.org/10.5281/zenodo.7018405) Test data is available here: https://zenodo.org/record/7018405
+```bash
+npm test              # Unit + component tests (Vitest)
+npm run test:watch    # Watch mode
+npm run test:coverage # Coverage report
+npm run test:e2e      # End-to-end tests (Playwright)
+```
 
-This includes:
-* SARS-CoV-2 sequenced reads from major VOCs. 
-* SARS-CoV-2 sequenced reads from samples that are known to have failed (for different reasons). 
-* The test data from above, with one additional sample.  
+## Test Data
 
-VOC and failed QC data are taken from  [CDCgov/datasets-sars-cov-2](https://github.com/CDCgov/datasets-sars-cov-2). 
+### Simple dataset (30MB)
+Included in `public/ronaqc_small_test.zip` — contains mapped reads of three sequenced controls and two genuine SARS-CoV-2 samples.
 
+### Exhaustive dataset (1GB)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7018405.svg)](https://doi.org/10.5281/zenodo.7018405)
 
+Available at https://zenodo.org/record/7018405 — includes VOC reads, known-failure samples, and the simple dataset above.
 
- 
+## Citation
+
+```
+Alikhan, N-F. (2022). RonaQC: Quality control of SARS-CoV-2 genomic data.
+https://github.com/happykhan/ronaQC
+```
+
+## License
+
+GPL-3.0
