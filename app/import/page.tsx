@@ -8,6 +8,9 @@ import { useNegativeControl, useSamples } from '@/lib/context'
 import type { ArticVersion, ProcessingProgress as ProgressType } from '@/lib/types'
 
 const articVersions: { value: ArticVersion; label: string }[] = [
+  { value: 'nCov-2019.v5.4.2.insert.bed', label: 'ARTIC V5.4.2 (latest)' },
+  { value: 'nCov-2019.v5.3.2.insert.bed', label: 'ARTIC V5.3.2' },
+  { value: 'nCov-2019.v5.0.0.insert.bed', label: 'ARTIC V5.0' },
   { value: 'nCov-2019.v4.1.insert.bed', label: 'ARTIC V4.1' },
   { value: 'nCov-2019.v4.insert.bed', label: 'ARTIC V4' },
   { value: 'nCov-2019.v3.insert.bed', label: 'ARTIC V3' },
@@ -18,7 +21,7 @@ const articVersions: { value: ArticVersion; label: string }[] = [
 export default function ImportPage() {
   const { negativeControl, dispatch } = useNegativeControl()
   const { sampleDispatch } = useSamples()
-  const [articV, setArticV] = useState<ArticVersion>('nCov-2019.v4.1.insert.bed')
+  const [articV, setArticV] = useState<ArticVersion>('nCov-2019.v5.4.2.insert.bed')
   const [subsampling, setSubsampling] = useState(true)
   const [ncProcessing, setNcProcessing] = useState(false)
   const [sampleProcessing, setSampleProcessing] = useState(false)

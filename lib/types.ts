@@ -39,6 +39,9 @@ export interface ProcessingProgress {
 }
 
 export type ArticVersion =
+  | 'nCov-2019.v5.4.2.insert.bed'
+  | 'nCov-2019.v5.3.2.insert.bed'
+  | 'nCov-2019.v5.0.0.insert.bed'
   | 'nCov-2019.v4.1.insert.bed'
   | 'nCov-2019.v4.insert.bed'
   | 'nCov-2019.v3.insert.bed'

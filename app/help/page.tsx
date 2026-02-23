@@ -204,9 +204,14 @@ export default function HelpPage() {
       <section className="card p-6 space-y-3">
         <h2 className="text-lg font-semibold text-gx-text">ARTIC Primer Versions</h2>
         <p className="text-sm text-gx-text-muted leading-relaxed">
-          RonaQC supports ARTIC primer schemes V1 through V4.1. Select the version that matches
+          RonaQC supports ARTIC primer schemes V1 through V5.4.2. Select the version that matches
           the primers used in your sequencing run. Using the wrong version will produce inaccurate
-          amplicon coverage results. V4.1 is the most recent and is selected by default.
+          amplicon coverage results. V5.4.2 is the most recent and is selected by default.
+          Primer schemes are sourced from the{' '}
+          <a href="https://github.com/quick-lab/primerschemes" target="_blank" rel="noopener noreferrer" className="text-gx-accent hover:underline">
+            quick-lab/primerschemes
+          </a>{' '}
+          repository.
         </p>
       </section>
 

@@ -11,6 +11,7 @@
 /coverage
 /test-results/
 /playwright-report/
+/e2e/fixtures/small_test/
 
 # production
 /build

@@ -10,15 +10,15 @@ test.describe('Import Page', () => {
     await expect(page.getByText('Drop sample BAM files here')).toBeVisible()
   })
 
-  test('shows ARTIC version selector', async ({ page }) => {
+  test('shows ARTIC version selector with all versions including v5', async ({ page }) => {
     await page.goto('/import')
 
     const selector = page.locator('#artic-version')
     await expect(selector).toBeVisible()
 
     const options = selector.locator('option')
-    await expect(options).toHaveCount(5)
-    await expect(options.first()).toHaveText('ARTIC V4.1')
+    await expect(options).toHaveCount(8)
+    await expect(options.first()).toContainText('V5.4.2')
   })
 
   test('shows sample data download link', async ({ page }) => {
