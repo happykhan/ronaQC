@@ -3,6 +3,7 @@
 import { useNegativeControl } from '@/lib/context'
 import StatusBadge from '@/components/StatusBadge'
 import CoveragePlot from '@/components/CoveragePlot'
+import { exportTableAsCSV } from '@/lib/exportUtils'
 
 export default function ControlPage() {
   const { negativeControl } = useNegativeControl()
@@ -75,6 +76,43 @@ export default function ControlPage() {
 
       {/* Metrics table */}
       <div className="card overflow-x-auto">
+        <div className="flex items-center justify-end gap-2 px-4 pt-4">
+          <button
+            onClick={() => {
+              const headers = ['Metric', 'Value', 'Status']
+              const rows = [
+                ['SNPs', negativeControl.snpCount !== undefined ? String(negativeControl.snpCount) : '', snpStatus],
+                ['Called Bases (Coverage >=10x)', negativeControl.genomeRecovery !== undefined ? String(negativeControl.genomeRecovery) : '', recoveryStatus],
+                ['Best Mapped Reads', negativeControl.onefoureight ?? '', ''],
+                ['Properly Paired Reads', negativeControl.properReads ?? '', ''],
+                ['Total Reads', negativeControl.totalReads ?? '', ''],
+                ['Detected Amplicons', negativeControl.detectedAmplicons?.join('; ') ?? '', ampStatus],
+              ]
+              exportTableAsCSV(headers, rows, 'control_report', ',')
+            }}
+            className="text-xs text-gx-accent hover:text-gx-accent-hover underline"
+          >
+            Export CSV
+          </button>
+          <span className="text-gx-text-muted text-xs">|</span>
+          <button
+            onClick={() => {
+              const headers = ['Metric', 'Value', 'Status']
+              const rows = [
+                ['SNPs', negativeControl.snpCount !== undefined ? String(negativeControl.snpCount) : '', snpStatus],
+                ['Called Bases (Coverage >=10x)', negativeControl.genomeRecovery !== undefined ? String(negativeControl.genomeRecovery) : '', recoveryStatus],
+                ['Best Mapped Reads', negativeControl.onefoureight ?? '', ''],
+                ['Properly Paired Reads', negativeControl.properReads ?? '', ''],
+                ['Total Reads', negativeControl.totalReads ?? '', ''],
+                ['Detected Amplicons', negativeControl.detectedAmplicons?.join('; ') ?? '', ampStatus],
+              ]
+              exportTableAsCSV(headers, rows, 'control_report', '\t')
+            }}
+            className="text-xs text-gx-accent hover:text-gx-accent-hover underline"
+          >
+            Export TSV
+          </button>
+        </div>
         <table className="gx-table">
           <thead>
             <tr>

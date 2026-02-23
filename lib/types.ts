@@ -19,6 +19,7 @@ export interface Sample {
   amplicons?: number[]
   ampLabels?: string[]
   missingAmplicons?: string[]
+  coverage?: number[]
   properReads?: string
   onefoureight?: string
   totalReads?: string

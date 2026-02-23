@@ -52,7 +52,7 @@ export async function processNegativeControl(
       onProgress({ step: 'Read mapping analysis complete', percent: 70, active: true })
       return [properReads, onefoureight, totalReads]
     }),
-    amplicons(mountedPath, file.name, CLI, articVersion).then(([ampList, ampListName]) => {
+    amplicons(mountedPath, file.name, CLI, articVersion).then(([ampList, ampListName, _rawCov]) => {
       const detectedAmplicons = ampList
         .map((coverage, index) => ({ coverage, name: ampListName[index] }))
         .filter((a) => a.coverage >= 0.4)
@@ -102,7 +102,7 @@ export async function processSample(
     updates: { comments: 'Calculating amplicons' },
   })
 
-  const [ampList, ampListName] = await sampleAmplicons(mountedPath, file.name, CLI, articVersion)
+  const [ampList, ampListName, rawCoverage] = await sampleAmplicons(mountedPath, file.name, CLI, articVersion)
   const missingAmplicons = ampList
     .map((coverage, index) => ({ coverage, name: ampListName[index] }))
     .filter((a) => a.coverage < 0.4)
@@ -111,7 +111,7 @@ export async function processSample(
   dispatch({
     type: 'EDIT_SAMPLE',
     name: file.name,
-    updates: { amplicons: ampList, missingAmplicons, ampLabels: ampListName },
+    updates: { amplicons: ampList, missingAmplicons, ampLabels: ampListName, coverage: rawCoverage },
   })
 
   // Step 2: Mapped reads (needed for subsampling ratio)
