@@ -83,14 +83,25 @@ export default function HelpPage() {
         <h2 className="text-lg font-semibold text-gx-text">Understanding the Sample Report</h2>
         <div className="space-y-4 text-sm text-gx-text-muted leading-relaxed">
           <div>
-            <h3 className="font-medium text-gx-text">Consensus Length</h3>
-            <p>Number of non-N bases in the consensus sequence. SARS-CoV-2 genome is ~29,903bp.</p>
+            <h3 className="font-medium text-gx-text">Genome Completeness (Consensus Length)</h3>
+            <p>Number of non-N bases in the consensus sequence. The SARS-CoV-2 reference genome (MN908947.3) is 29,903bp.
+              Genome completeness is expressed as a percentage of the reference length.</p>
           </div>
           <div>
             <h3 className="font-medium text-gx-text">QC Status</h3>
-            <p><strong className="text-gx-success">High QC</strong>: Consensus covers &gt;90% of the genome.
-               <strong className="text-gx-warning"> Base QC</strong>: Covers &gt;50%.
+            <p><strong className="text-gx-success">High QC</strong>: Genome completeness &gt;90%.
+               <strong className="text-gx-warning"> Base QC</strong>: Genome completeness &gt;50%.
                <strong className="text-gx-error"> Fail</strong>: Below 50%.</p>
+          </div>
+          <div>
+            <h3 className="font-medium text-gx-text">Judgement</h3>
+            <p>An actionable recommendation based on QC results, following{' '}
+              <a href="https://github.com/pha4ge/pipeline-resources/blob/main/docs/qc-solutions.md" target="_blank" rel="noopener noreferrer" className="text-gx-accent hover:underline">PHA4GE guidelines</a>:</p>
+            <ul className="list-disc list-inside mt-1 space-y-1 pl-2">
+              <li><strong className="text-gx-success">Upload</strong> — Suitable for submission to GISAID / INSDC (&gt;90% genome completeness)</li>
+              <li><strong className="text-gx-warning">Use only</strong> — Can be used for internal analysis but not for public database submission (50–90%)</li>
+              <li><strong className="text-gx-error">Discard</strong> — Insufficient quality for any use (&lt;50%)</li>
+            </ul>
           </div>
           <div>
             <h3 className="font-medium text-gx-text">Ambiguous Bases</h3>
@@ -106,6 +117,86 @@ export default function HelpPage() {
             <h3 className="font-medium text-gx-text">Missing Amplicons</h3>
             <p>Count of amplicons with &lt;40% coverage. Missing amplicons cause gaps in the consensus.</p>
           </div>
+          <div>
+            <h3 className="font-medium text-gx-text">NC Amplicon Cross-Check</h3>
+            <p>When a negative control is loaded, amplicons detected in the control are flagged
+              in the sample report with a warning badge. This helps identify potential
+              cross-contamination at the amplicon level.</p>
+          </div>
+          <div>
+            <h3 className="font-medium text-gx-text">Per-Sample Coverage Plot</h3>
+            <p>Click the &quot;Coverage&quot; link in the Actions column to view a genome-wide
+              coverage depth plot for each sample.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* QC Guidelines Table (#20) */}
+      <section className="card p-6 space-y-3">
+        <h2 className="text-lg font-semibold text-gx-text">QC Metrics &amp; Thresholds</h2>
+        <p className="text-sm text-gx-text-muted leading-relaxed">
+          The following table summarises all QC metrics used by RonaQC, their thresholds, and how they
+          map to QC status. These guidelines are aligned with{' '}
+          <a href="https://github.com/pha4ge/pipeline-resources/blob/main/docs/qc-solutions.md" target="_blank" rel="noopener noreferrer" className="text-gx-accent hover:underline">
+            PHA4GE QC recommendations
+          </a>.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="gx-table text-sm">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Applies To</th>
+                <th>Pass</th>
+                <th>Warn</th>
+                <th>Fail</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="font-medium">Genome Completeness</td>
+                <td>Sample</td>
+                <td>&gt;90% (High QC)</td>
+                <td>&gt;50% (Base QC)</td>
+                <td>&le;50%</td>
+              </tr>
+              <tr>
+                <td className="font-medium">SNPs (Negative Control)</td>
+                <td>Control</td>
+                <td>0</td>
+                <td>&mdash;</td>
+                <td>&gt;0</td>
+              </tr>
+              <tr>
+                <td className="font-medium">Called Bases &ge;10x (Control)</td>
+                <td>Control</td>
+                <td>&lt;500</td>
+                <td>&ge;500</td>
+                <td>&mdash;</td>
+              </tr>
+              <tr>
+                <td className="font-medium">Detected Amplicons (Control)</td>
+                <td>Control</td>
+                <td>0</td>
+                <td>1</td>
+                <td>&gt;1</td>
+              </tr>
+              <tr>
+                <td className="font-medium">Amplicon Coverage</td>
+                <td>Sample</td>
+                <td>&ge;40%</td>
+                <td>&mdash;</td>
+                <td>&lt;40% (missing)</td>
+              </tr>
+              <tr>
+                <td className="font-medium">File Size</td>
+                <td>Both</td>
+                <td>&le;500MB</td>
+                <td>500MB &ndash; 2GB</td>
+                <td>&gt;2GB (rejected)</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -150,6 +241,12 @@ export default function HelpPage() {
           Alikhan, N-F. (2022). RonaQC: Quality control of SARS-CoV-2 genomic data.
           https://github.com/happykhan/ronaQC
         </code>
+        <p className="text-sm text-gx-text-muted leading-relaxed mt-2">
+          QC terminology and thresholds follow the{' '}
+          <a href="https://github.com/pha4ge/pipeline-resources/blob/main/docs/qc-solutions.md" target="_blank" rel="noopener noreferrer" className="text-gx-accent hover:underline">
+            PHA4GE SARS-CoV-2 QC guidelines
+          </a>.
+        </p>
       </section>
 
       {/* Technology & Privacy */}

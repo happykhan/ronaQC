@@ -99,7 +99,7 @@ export async function amplicons(
   _fileName: string,
   CLI: AioliCLI,
   articV: string
-): Promise<[number[], string[]]> {
+): Promise<[number[], string[], number[]]> {
   try {
     const bedFileLoc = await fetch(`/primer_schemes/${articV}`)
     const depthOutput = await CLI.exec(`samtools depth -a ${mountedPath}`)
@@ -133,7 +133,7 @@ export async function amplicons(
       ampListName.push(idname)
     }
 
-    return [ampList, ampListName]
+    return [ampList, ampListName, coverage]
   } catch (err) {
     throw new Error(`Amplicon analysis failed: ${err instanceof Error ? err.message : String(err)}`)
   }
