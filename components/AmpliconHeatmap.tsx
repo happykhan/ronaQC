@@ -28,8 +28,8 @@ export default function AmpliconHeatmap({ amplicons, labels }: AmpliconHeatmapPr
 
     const containerWidth = containerRef.current.clientWidth
     const width = Math.max(containerWidth, 600)
-    const height = Math.max(200, amplicons.length * 40 + 160)
-    const margin = { top: 20, right: 100, bottom: 80, left: 120 }
+    const height = Math.max(200, amplicons.length * 40 + 260)
+    const margin = { top: 20, right: 100, bottom: 180, left: 120 }
 
     const indexList = labels ?? Array.from(
       { length: amplicons[0]?.coverage.length ?? 0 },
@@ -118,7 +118,7 @@ export default function AmpliconHeatmap({ amplicons, labels }: AmpliconHeatmapPr
       .attr('transform', `translate(0,${plotHeight})`)
       .call(xAxis)
       .selectAll('text')
-      .attr('transform', 'rotate(-90) translate(0, -5)')
+      .attr('transform', 'rotate(-65) translate(-5, 0)')
       .style('text-anchor', 'end')
       .attr('fill', textColor)
       .style('font-size', '9px')
@@ -133,7 +133,7 @@ export default function AmpliconHeatmap({ amplicons, labels }: AmpliconHeatmapPr
     // Axis label
     g.append('text')
       .attr('x', plotWidth / 2)
-      .attr('y', plotHeight + 65)
+      .attr('y', plotHeight + 160)
       .attr('text-anchor', 'middle')
       .attr('fill', textColor)
       .style('font-size', '12px')

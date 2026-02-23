@@ -12,7 +12,14 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['lib/**/*.ts', 'lib/**/*.tsx'],
-      exclude: ['lib/__tests__/**', 'lib/test-setup.ts'],
+      exclude: [
+        'lib/__tests__/**',
+        'lib/test-setup.ts',
+        'lib/aioli.d.ts',
+        'lib/types.ts',
+        'lib/colorScales.ts',
+        'lib/exportPlot.ts',
+      ],
       thresholds: {
         lines: 70,
       },

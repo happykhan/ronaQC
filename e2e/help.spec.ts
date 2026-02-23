@@ -16,6 +16,18 @@ test.describe('Help Page', () => {
     await expect(page.getByText('Technology & Privacy')).toBeVisible()
   })
 
+  test('shows QC metrics and thresholds table', async ({ page }) => {
+    await page.goto('/help')
+    await expect(page.getByText('QC Metrics & Thresholds')).toBeVisible()
+    await expect(page.getByText('Genome Completeness')).toBeVisible()
+    await expect(page.getByText('PHA4GE')).toBeVisible()
+  })
+
+  test('mentions primer scheme source', async ({ page }) => {
+    await page.goto('/help')
+    await expect(page.getByText('quick-lab/primerschemes')).toBeVisible()
+  })
+
   test('mentions privacy (no data upload)', async ({ page }) => {
     await page.goto('/help')
     await expect(page.getByText('No data leaves your computer')).toBeVisible()
