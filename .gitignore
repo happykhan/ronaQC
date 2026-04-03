@@ -3,7 +3,10 @@
 /.pnp
 .pnp.js
 
-# next.js
+# vite
+/dist/
+
+# next.js (legacy)
 /.next/
 /out/
 

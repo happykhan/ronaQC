@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Browser-based quality control tool for SARS-CoV-2 sequencing data. Assess cross-contamination, primer contamination, and consensus quality from BAM files directly in the browser." />
+    <meta name="author" content="Nabil-Fareed Alikhan" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="RonaQC — SARS-CoV-2 Sequencing QC" />
+    <meta property="og:description" content="Quality control for SARS-CoV-2 BAM files. Runs entirely in your browser — no data uploaded." />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="RonaQC — SARS-CoV-2 Sequencing QC" />
+    <meta name="twitter:description" content="Quality control for SARS-CoV-2 BAM files. Runs entirely in your browser." />
+    <meta name="twitter:creator" content="@happy_khan" />
+
+    <title>RonaQC — SARS-CoV-2 Sequencing QC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <script>
+      (function() {
+        var theme = localStorage.getItem('gx-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
