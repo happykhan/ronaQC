@@ -48,6 +48,7 @@ export default function App() {
         <NavBar
           appName="RONAQC"
           appSubtitle="SARS-CoV-2 sequencing QC"
+          githubUrl="https://github.com/happykhan/ronaQC"
           version={APP_VERSION}
           icon={
             <svg className="gx-nav-logo-icon" viewBox="0 0 24 24" fill="none" stroke="var(--gx-accent)" strokeWidth="1.5">
