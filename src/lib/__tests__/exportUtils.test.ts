@@ -23,8 +23,8 @@ describe('exportTableAsCSV', () => {
     exportTableAsCSV(headers, rows, 'test_report', ',')
 
     expect(saveAs).toHaveBeenCalledTimes(1)
-    const blob = (saveAs as ReturnType<typeof vi.fn>).mock.calls[0][0] as Blob
-    const filename = (saveAs as ReturnType<typeof vi.fn>).mock.calls[0][1]
+    const blob = vi.mocked(saveAs).mock.calls[0][0] as Blob
+    const filename = vi.mocked(saveAs).mock.calls[0][1]
 
     expect(filename).toBe('test_report.csv')
     expect(blob.type).toBe('text/csv;charset=utf-8')
@@ -36,7 +36,7 @@ describe('exportTableAsCSV', () => {
 
     exportTableAsCSV(headers, rows, 'output', '\t')
 
-    const filename = (saveAs as ReturnType<typeof vi.fn>).mock.calls[0][1]
+    const filename = vi.mocked(saveAs).mock.calls[0][1]
     expect(filename).toBe('output.tsv')
   })
 
@@ -47,7 +47,7 @@ describe('exportTableAsCSV', () => {
     exportTableAsCSV(headers, rows, 'test', ',')
 
     expect(saveAs).toHaveBeenCalledTimes(1)
-    const blob = (saveAs as ReturnType<typeof vi.fn>).mock.calls[0][0] as Blob
+    const blob = vi.mocked(saveAs).mock.calls[0][0] as Blob
     expect(blob.type).toBe('text/csv;charset=utf-8')
   })
 

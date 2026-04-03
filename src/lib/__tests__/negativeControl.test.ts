@@ -3,7 +3,7 @@ import { covDepth, snpMethod, mappedReads, amplicons } from '../negativeControl'
 
 // Mock fetch for reference files and BED files
 const mockFetch = vi.fn()
-global.fetch = mockFetch
+vi.stubGlobal('fetch', mockFetch)
 
 function createMockCLI(overrides: Record<string, unknown> = {}) {
   return {

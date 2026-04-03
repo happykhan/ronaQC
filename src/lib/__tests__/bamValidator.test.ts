@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { validateBAM } from '../bamValidator'
 
 function createFile(name: string, content: Uint8Array, size?: number): File {
-  const blob = new Blob([content])
+  const blob = new Blob([content.buffer as ArrayBuffer])
   const file = new File([blob], name)
   if (size !== undefined) {
     Object.defineProperty(file, 'size', { value: size })

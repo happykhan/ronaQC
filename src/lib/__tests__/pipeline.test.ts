@@ -14,7 +14,7 @@ vi.mock('@biowasm/aioli', () => ({
 
 // Mock fetch for reference files
 const mockFetch = vi.fn()
-global.fetch = mockFetch
+vi.stubGlobal('fetch', mockFetch)
 
 describe('pipeline', () => {
   beforeEach(() => {
