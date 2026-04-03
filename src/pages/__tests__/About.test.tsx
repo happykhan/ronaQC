@@ -1,31 +1,40 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { About } from '../About'
+
+function renderAbout() {
+  return render(
+    <MemoryRouter>
+      <About />
+    </MemoryRouter>
+  )
+}
 
 describe('About', () => {
   it('renders the About heading', () => {
-    render(<About />)
+    renderAbout()
     expect(screen.getByText('About RonaQC')).toBeInTheDocument()
   })
 
   it('renders the author name', () => {
-    render(<About />)
+    renderAbout()
     expect(screen.getByText('Nabil-Fareed Alikhan')).toBeInTheDocument()
   })
 
   it('renders the author role', () => {
-    render(<About />)
+    renderAbout()
     expect(screen.getByText(/Senior Bioinformatician/)).toBeInTheDocument()
   })
 
   it('renders GitHub link', () => {
-    render(<About />)
+    renderAbout()
     const links = screen.getAllByText(/github.com\/happykhan\/ronaQC/)
     expect(links.length).toBeGreaterThanOrEqual(1)
   })
 
   it('renders privacy note about no data upload', () => {
-    render(<About />)
-    expect(screen.getByText(/No data leaves your computer/)).toBeInTheDocument()
+    renderAbout()
+    expect(screen.getByText(/never uploaded to any server/)).toBeInTheDocument()
   })
 })

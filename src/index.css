@@ -53,3 +53,56 @@ a:hover { color: var(--gx-accent-hover); }
   outline: 2px solid var(--gx-accent);
   outline-offset: 2px;
 }
+
+/* ─── Analysis Tab Nav ─── */
+
+.rqc-tab-nav {
+  background: var(--gx-bg-alt);
+  border-bottom: 1px solid var(--gx-border);
+}
+
+.rqc-tab-nav-inner {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.rqc-tab-nav-inner::-webkit-scrollbar { display: none; }
+
+@media (min-width: 640px) { .rqc-tab-nav-inner { padding: 0 1.5rem; } }
+@media (min-width: 1024px) { .rqc-tab-nav-inner { padding: 0 2rem; } }
+
+.rqc-tab-link {
+  display: inline-block;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gx-text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color var(--gx-transition), border-color var(--gx-transition);
+}
+.rqc-tab-link:hover {
+  color: var(--gx-text);
+}
+.rqc-tab-link--active {
+  color: var(--gx-accent);
+  border-bottom-color: var(--gx-accent);
+}
+
+/* ─── Main Content ─── */
+
+.app-main {
+  flex: 1;
+  max-width: 80rem;
+  margin: 0 auto;
+  width: 100%;
+  padding: 2rem 1rem;
+}
+
+@media (min-width: 640px) { .app-main { padding: 2rem 1.5rem; } }
+@media (min-width: 1024px) { .app-main { padding: 2rem; } }
