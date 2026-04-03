@@ -84,7 +84,7 @@ export default function App() {
             <Route path="/about" element={<About />} />
           </Routes>
         </main>
-        <AppFooter appName="RONAQC" />
+        <AppFooter appName="RONAQC" bugReportEmail="nabil@happykhan.com" bugReportUrl="https://github.com/happykhan/ronaQC/issues" />
       </div>
     </AppProviders>
   )
