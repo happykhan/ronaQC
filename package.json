@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@biowasm/aioli": "^3.2.1",
-    "@genomicx/ui": "^0.7.1",
+    "@genomicx/ui": "^0.8.0",
     "d3": "^7.9.0",
     "file-saver": "^2.0.5",
     "react": "^19.0.0",
@@ -33,6 +33,7 @@
     "@testing-library/user-event": "^14.5.2",
     "@types/d3": "^7.4.3",
     "@types/file-saver": "^2.0.7",
+    "@types/node": "^25.5.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.4",
