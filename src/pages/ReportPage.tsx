@@ -1,11 +1,18 @@
 import { useState } from 'react'
 import { useSamples, useNegativeControl } from '@/lib/context'
-import StatusBadge from '@/components/StatusBadge'
+import { StatusBadge } from '@genomicx/ui'
 import AmpliconHeatmap from '@/components/AmpliconHeatmap'
 import SampleCoverageModal from '@/components/SampleCoverageModal'
 import { saveAs } from 'file-saver'
 import { exportTableAsCSV } from '@/lib/exportUtils'
 import type { Sample } from '@/lib/types'
+
+const qcVariantMap = {
+  pass: 'success',
+  warn: 'warning',
+  fail: 'error',
+  unknown: 'muted',
+} as const
 
 function getQcStatus(sample: { highQCpass?: string; baseQCpass?: string; comments?: string }) {
   if (sample.comments && sample.comments !== 'Done') return 'unknown'
@@ -211,10 +218,9 @@ export function ReportPage() {
                         : '\u2014'}
                   </td>
                   <td>
-                    <StatusBadge
-                      status={getQcStatus(sample) as 'pass' | 'warn' | 'fail' | 'unknown'}
-                      label={getQcLabel(sample)}
-                    />
+                    <StatusBadge variant={qcVariantMap[getQcStatus(sample)]}>
+                      {getQcLabel(sample)}
+                    </StatusBadge>
                   </td>
                   <td>
                     <span className="inline-flex items-center gap-1.5" title={judgement.description}>

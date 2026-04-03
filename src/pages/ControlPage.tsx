@@ -1,5 +1,5 @@
 import { useNegativeControl } from '@/lib/context'
-import StatusBadge from '@/components/StatusBadge'
+import { StatusBadge } from '@genomicx/ui'
 import CoveragePlot from '@/components/CoveragePlot'
 import { exportTableAsCSV } from '@/lib/exportUtils'
 
@@ -56,6 +56,20 @@ export function ControlPage() {
       : ampCount === 1
         ? 'warn'
         : 'pass'
+
+  const variantMap = {
+    pass: 'success',
+    warn: 'warning',
+    fail: 'error',
+    unknown: 'muted',
+  } as const
+
+  const labelMap = {
+    pass: 'Pass',
+    warn: 'Warning',
+    fail: 'Fail',
+    unknown: 'Unknown',
+  } as const
 
   return (
     <div className="space-y-6">
@@ -127,7 +141,7 @@ export function ControlPage() {
                   ? negativeControl.snpCount
                   : 'Calculating...'}
               </td>
-              <td><StatusBadge status={snpStatus as 'pass' | 'warn' | 'fail' | 'unknown'} /></td>
+              <td><StatusBadge variant={variantMap[snpStatus as keyof typeof variantMap]}>{labelMap[snpStatus as keyof typeof labelMap]}</StatusBadge></td>
             </tr>
             <tr>
               <td className="font-sans font-medium">Called Bases (Coverage &ge;10x)</td>
@@ -136,7 +150,7 @@ export function ControlPage() {
                   ? negativeControl.genomeRecovery.toLocaleString()
                   : 'Calculating...'}
               </td>
-              <td><StatusBadge status={recoveryStatus as 'pass' | 'warn' | 'fail' | 'unknown'} /></td>
+              <td><StatusBadge variant={variantMap[recoveryStatus as keyof typeof variantMap]}>{labelMap[recoveryStatus as keyof typeof labelMap]}</StatusBadge></td>
             </tr>
             <tr>
               <td className="font-sans font-medium">Best Mapped Reads</td>
@@ -162,7 +176,7 @@ export function ControlPage() {
                     : 'None'
                   : 'Calculating...'}
               </td>
-              <td><StatusBadge status={ampStatus as 'pass' | 'warn' | 'fail' | 'unknown'} /></td>
+              <td><StatusBadge variant={variantMap[ampStatus as keyof typeof variantMap]}>{labelMap[ampStatus as keyof typeof labelMap]}</StatusBadge></td>
             </tr>
           </tbody>
         </table>

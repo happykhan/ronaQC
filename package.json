@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@biowasm/aioli": "^3.2.1",
-    "@genomicx/ui": "^0.8.0",
+    "@genomicx/ui": "^0.9.0",
     "d3": "^7.9.0",
     "file-saver": "^2.0.5",
     "react": "^19.0.0",
