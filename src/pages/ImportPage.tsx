@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import FileDropZone from '@/components/FileDropZone'
+import { FileUpload } from '@genomicx/ui'
 import ProcessingProgress from '@/components/ProcessingProgress'
 import Alert from '@/components/Alert'
 import { useNegativeControl, useSamples } from '@/lib/context'
@@ -102,7 +102,7 @@ export function ImportPage() {
 
       {/* Settings */}
       <div className="card p-6 space-y-4">
-        <h2 className="text-lg font-semibold text-gx-text">Settings</h2>
+        <h2 className="text-lg font-semibold" style={{ color: 'var(--gx-text)' }}>Settings</h2>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
@@ -126,16 +126,15 @@ export function ImportPage() {
 
           <div className="flex items-end">
             <label className="inline-flex items-center gap-3 cursor-pointer">
-              <span className="text-sm font-medium text-gx-text">Subsampling</span>
+              <span className="text-sm font-medium" style={{ color: 'var(--gx-text)' }}>Subsampling</span>
               <button
                 type="button"
                 role="switch"
                 aria-checked={subsampling}
                 onClick={() => setSubsampling(!subsampling)}
                 disabled={isProcessing}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  subsampling ? 'bg-gx-accent' : 'bg-gx-border'
-                } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                style={{ background: subsampling ? 'var(--gx-accent)' : 'var(--gx-border)' }}
               >
                 <span
                   className={`inline-block h-4 w-4 rounded-full bg-white transition-transform ${
@@ -143,7 +142,7 @@ export function ImportPage() {
                   }`}
                 />
               </button>
-              <span className="text-xs text-gx-text-muted">
+              <span className="text-xs" style={{ color: 'var(--gx-text-muted)' }}>
                 {subsampling ? 'On (30K reads)' : 'Off'}
               </span>
             </label>
@@ -154,16 +153,18 @@ export function ImportPage() {
       {/* Upload zones */}
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-3">
-          <h2 className="text-lg font-semibold text-gx-text">Negative Control</h2>
-          <FileDropZone
+          <h2 className="text-lg font-semibold" style={{ color: 'var(--gx-text)' }}>Negative Control</h2>
+          <FileUpload
+            files={[]}
+            onFilesChange={handleControlFiles}
             accept=".bam"
-            onFiles={handleControlFiles}
+            multiple={false}
             label="Drop negative control BAM file here"
-            hint="Or click to browse. Single BAM file."
+            hint="Single BAM file."
             disabled={isProcessing}
           />
           {negativeControl.name && (
-            <p className="text-sm text-gx-text-muted">
+            <p className="text-sm" style={{ color: 'var(--gx-text-muted)' }}>
               Loaded: <span className="font-mono">{negativeControl.name}</span>
             </p>
           )}
@@ -171,13 +172,14 @@ export function ImportPage() {
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-lg font-semibold text-gx-text">Sample Data</h2>
-          <FileDropZone
+          <h2 className="text-lg font-semibold" style={{ color: 'var(--gx-text)' }}>Sample Data</h2>
+          <FileUpload
+            files={[]}
+            onFilesChange={handleSampleFiles}
             accept=".bam"
             multiple
-            onFiles={handleSampleFiles}
             label="Drop sample BAM files here"
-            hint="Or click to browse. Multiple files supported."
+            hint="Multiple BAM files supported."
             disabled={isProcessing}
           />
           <ProcessingProgress progress={sampleProgress} />
@@ -186,7 +188,7 @@ export function ImportPage() {
 
       {/* Sample data download */}
       <div className="card p-6">
-        <p className="text-sm text-gx-text-muted mb-3">
+        <p className="text-sm mb-3" style={{ color: 'var(--gx-text-muted)' }}>
           Don&apos;t have any data? Download sample data with sequenced controls:
         </p>
         <a
