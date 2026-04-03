@@ -6,6 +6,11 @@
   "description": "Quality control of SARS-CoV-2 genomic data using mapped reads (BAM)",
   "author": "Nabil-Fareed Alikhan",
   "license": "GPL-3.0",
+  "homepage": "https://ronaqc.genomicx.org",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/happykhan/ronaQC.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -23,7 +28,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.4.1",
-    "react-router-dom": "^7.5.0"
+    "react-router-dom": "^7.14.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",

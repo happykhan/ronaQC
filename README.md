@@ -1,72 +1,43 @@
 # RonaQC
 
-[![CI](https://github.com/happykhan/ronaQC/actions/workflows/ci.yml/badge.svg)](https://github.com/happykhan/ronaQC/actions/workflows/ci.yml)
+> Browser-based quality control for SARS-CoV-2 sequencing data — no data upload required.
 
-Quality control tool for SARS-CoV-2 sequencing data. RonaQC processes BAM files entirely in the browser using WebAssembly — **no data leaves your computer**.
+RonaQC processes BAM files from ARTIC and similar pipelines entirely in the browser using WebAssembly. It assesses cross-contamination, primer contamination, and consensus sequence quality to determine whether samples are suitable for phylogenetic analysis and submission to public databases (GISAID / INSDC). Your BAM files are never uploaded to any server.
 
 ## Features
 
-- **Browser-based analysis** — Runs samtools and ivar via WebAssembly (biowasm)
-- **Negative control QC** — SNP detection, genome coverage, mapped reads, amplicon analysis
-- **Sample QC** — Consensus generation, QC thresholds, ambiguous base detection, N-run analysis
-- **Interactive visualizations** — D3.js coverage plots and amplicon heatmaps with tooltips and export
-- **ARTIC primer support** — V1 through V4.1 primer schemes
-- **Optional subsampling** — Subsample to 30K reads for faster consensus generation
-- **Privacy-first** — All processing happens locally in the browser
+- ARTIC primer scheme support (V1 through V5.4.2)
+- Negative control QC — detects cross-contamination via SNP and amplicon analysis
+- Sample QC — genome completeness, ambiguous bases, longest N run
+- Amplicon coverage heatmap for visual QC across samples
+- Per-sample genome-wide coverage plots
+- Actionable judgements aligned with PHA4GE QC guidelines (Upload / Use only / Discard)
+- CSV/TSV export for all reports
+- Optional subsampling (30K reads) for faster processing
+
+## Tech Stack
+
+- **samtools** — BAM processing and coverage statistics (via biowasm WebAssembly)
+- **ivar** — primer trimming and consensus calling (via biowasm WebAssembly)
+- **D3.js** — interactive coverage plots and amplicon heatmaps
+- **React + Vite** — frontend framework
+- **Cloudflare Pages** — global CDN hosting
 
 ## Getting Started
 
 ```bash
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
-
-# Run tests
-npm test
-
-# Build for production
-npm run build
 ```
 
-## Architecture
+Open http://localhost:5173
 
-- **Framework**: Next.js 15 + React 19 + TypeScript
-- **Styling**: Tailwind CSS with GenomicX design tokens
-- **Bioinformatics**: @biowasm/aioli (samtools 1.10 + ivar 1.3.1)
-- **Visualizations**: D3.js v7
-- **Testing**: Vitest + Testing Library + Playwright
-- **Deployment**: Vercel
-
-## Project Structure
-
-```
-app/           → Next.js pages (import, control, report, help)
-components/    → Reusable UI components
-lib/           → Core logic (pipeline, validators, contexts, types)
-public/        → Reference genome, primer schemes, test data
-e2e/           → Playwright end-to-end tests
-```
-
-## Testing
+## Running Tests
 
 ```bash
-npm test              # Unit + component tests (Vitest)
-npm run test:watch    # Watch mode
-npm run test:coverage # Coverage report
-npm run test:e2e      # End-to-end tests (Playwright)
+npm test           # unit tests
+npm run test:e2e   # end-to-end tests (requires build first)
 ```
-
-## Test Data
-
-### Simple dataset (30MB)
-Included in `public/ronaqc_small_test.zip` — contains mapped reads of three sequenced controls and two genuine SARS-CoV-2 samples.
-
-### Exhaustive dataset (1GB)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7018405.svg)](https://doi.org/10.5281/zenodo.7018405)
-
-Available at https://zenodo.org/record/7018405 — includes VOC reads, known-failure samples, and the simple dataset above.
 
 ## Citation
 
@@ -75,6 +46,10 @@ Alikhan, N-F. (2022). RonaQC: Quality control of SARS-CoV-2 genomic data.
 https://github.com/happykhan/ronaQC
 ```
 
+## Contributing
+
+Contributions welcome. Please open an issue first to discuss changes.
+
 ## License
 
-GPL-3.0
+GPL-3.0 — see [LICENSE](LICENSE)
