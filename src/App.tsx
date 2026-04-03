@@ -45,7 +45,33 @@ export default function App() {
   return (
     <AppProviders>
       <div className="app">
-        <NavBar appName="RONAQC" appSubtitle="SARS-CoV-2 sequencing QC" version={APP_VERSION} />
+        <NavBar
+          appName="RONAQC"
+          appSubtitle="SARS-CoV-2 sequencing QC"
+          version={APP_VERSION}
+          icon={
+            <svg className="gx-nav-logo-icon" viewBox="0 0 24 24" fill="none" stroke="var(--gx-accent)" strokeWidth="1.5">
+              {/* Coronavirus particle icon */}
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="2" x2="12" y2="6" />
+              <circle cx="12" cy="1.5" r="1" fill="var(--gx-accent)" stroke="none" />
+              <line x1="12" y1="18" x2="12" y2="22" />
+              <circle cx="12" cy="22.5" r="1" fill="var(--gx-accent)" stroke="none" />
+              <line x1="2" y1="12" x2="6" y2="12" />
+              <circle cx="1.5" cy="12" r="1" fill="var(--gx-accent)" stroke="none" />
+              <line x1="18" y1="12" x2="22" y2="12" />
+              <circle cx="22.5" cy="12" r="1" fill="var(--gx-accent)" stroke="none" />
+              <line x1="4.93" y1="4.93" x2="7.76" y2="7.76" />
+              <circle cx="4.22" cy="4.22" r="1" fill="var(--gx-accent)" stroke="none" />
+              <line x1="16.24" y1="16.24" x2="19.07" y2="19.07" />
+              <circle cx="19.78" cy="19.78" r="1" fill="var(--gx-accent)" stroke="none" />
+              <line x1="19.07" y1="4.93" x2="16.24" y2="7.76" />
+              <circle cx="19.78" cy="4.22" r="1" fill="var(--gx-accent)" stroke="none" />
+              <line x1="7.76" y1="16.24" x2="4.93" y2="19.07" />
+              <circle cx="4.22" cy="19.78" r="1" fill="var(--gx-accent)" stroke="none" />
+            </svg>
+          }
+        />
         <TabNav />
         <main className="app-main">
           <Routes>
