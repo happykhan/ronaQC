@@ -1,5 +1,6 @@
 'use client'
 
+import { ProgressBar } from '@genomicx/ui'
 import type { ProcessingProgress as ProgressType } from '@/lib/types'
 
 interface ProcessingProgressProps {
@@ -34,17 +35,7 @@ export default function ProcessingProgress({ progress }: ProcessingProgressProps
         </svg>
         <span className="text-sm font-medium text-gx-text">{progress.step}</span>
       </div>
-      <div className="progress-bar">
-        <div
-          className="progress-bar-fill"
-          style={{ width: `${progress.percent}%` }}
-          role="progressbar"
-          aria-valuenow={progress.percent}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-label={`Processing: ${progress.percent}%`}
-        />
-      </div>
+      <ProgressBar value={progress.percent} />
     </div>
   )
 }

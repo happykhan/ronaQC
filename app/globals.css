@@ -84,14 +84,6 @@ body {
     @apply text-2xl font-bold text-gx-text tracking-tight;
   }
 
-  .progress-bar {
-    @apply h-2 rounded-full bg-gx-bg-alt overflow-hidden;
-  }
-
-  .progress-bar-fill {
-    @apply h-full rounded-full bg-gx-accent transition-all duration-300 ease-out;
-  }
-
   .gx-table {
     @apply w-full text-sm;
   }
