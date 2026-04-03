@@ -1,10 +1,15 @@
 import { test, expect } from '@playwright/test'
 import path from 'path'
+import { fileURLToPath } from 'url'
+import { existsSync } from 'fs'
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const FIXTURES = path.join(__dirname, 'fixtures', 'small_test')
+const fixturesAvailable = existsSync(path.join(FIXTURES, 'NC_OK.bam'))
 
 // Pipeline tests use real BAM files and WebAssembly processing — they need longer timeouts
 test.describe('Pipeline — Negative Control', () => {
+  test.skip(!fixturesAvailable, 'BAM fixtures not available — run with ronaqc_small_test.zip in public/')
   test.setTimeout(300_000) // 5 minutes
 
   test('NC_Terrible shows contaminated control', async ({ page }) => {
@@ -72,6 +77,7 @@ test.describe('Pipeline — Negative Control', () => {
 })
 
 test.describe('Pipeline — Sample Processing', () => {
+  test.skip(!fixturesAvailable, 'BAM fixtures not available')
   test.setTimeout(300_000) // 5 minutes
 
   test('Test_sample_1 shows good QC', async ({ page }) => {
@@ -115,6 +121,7 @@ test.describe('Pipeline — Sample Processing', () => {
 })
 
 test.describe('Pipeline — Full Workflow', () => {
+  test.skip(!fixturesAvailable, 'BAM fixtures not available')
   test.setTimeout(300_000)
 
   test('upload control then sample, verify cross-check', async ({ page }) => {
@@ -169,6 +176,7 @@ test.describe('Pipeline — Full Workflow', () => {
 })
 
 test.describe('Pipeline — Export', () => {
+  test.skip(!fixturesAvailable, 'BAM fixtures not available')
   test.setTimeout(300_000)
 
   test('control report CSV export works', async ({ page }) => {

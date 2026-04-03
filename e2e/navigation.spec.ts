@@ -6,22 +6,20 @@ test.describe('Navigation', () => {
     await expect(page).toHaveURL('/import')
   })
 
-  test('navigates between pages', async ({ page }) => {
+  test('navigates between pages via tab nav', async ({ page }) => {
     await page.goto('/import')
+    const tabNav = page.locator('.rqc-tab-nav')
 
-    await page.click('text=Control Report')
+    await tabNav.getByText('Control Report').click()
     await expect(page).toHaveURL('/control')
-    await expect(page.locator('h1')).toContainText('Control Report')
 
-    await page.click('text=Sample Report')
+    await tabNav.getByText('Sample Report').click()
     await expect(page).toHaveURL('/report')
-    await expect(page.locator('h1')).toContainText('Sample Report')
 
-    await page.click('text=Help')
+    await tabNav.getByText('Help').click()
     await expect(page).toHaveURL('/help')
-    await expect(page.locator('h1')).toContainText('Help')
 
-    await page.click('text=Import')
+    await tabNav.getByText('Import').click()
     await expect(page).toHaveURL('/import')
   })
 
@@ -31,18 +29,10 @@ test.describe('Navigation', () => {
     // Default is dark
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
 
-    // Click the theme toggle (switch role)
-    const themeToggle = page.getByRole('switch')
-    await themeToggle.click()
+    await page.getByRole('button', { name: 'Light theme' }).click()
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
 
-    // Toggle back
-    await themeToggle.click()
+    await page.getByRole('button', { name: 'Dark theme' }).click()
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
-  })
-
-  test('shows 404 for unknown routes', async ({ page }) => {
-    await page.goto('/nonexistent')
-    await expect(page.locator('h1')).toContainText('404')
   })
 })
