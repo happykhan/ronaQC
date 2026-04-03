@@ -5,24 +5,6 @@ interface AlertProps {
   children: React.ReactNode
 }
 
-const variantConfig: Record<AlertVariant, { bg: string; border: string; icon: string }> = {
-  info: {
-    bg: 'bg-gx-info/10',
-    border: 'border-gx-info/30',
-    icon: 'text-gx-info',
-  },
-  warning: {
-    bg: 'bg-gx-warning/10',
-    border: 'border-gx-warning/30',
-    icon: 'text-gx-warning',
-  },
-  error: {
-    bg: 'bg-gx-error/10',
-    border: 'border-gx-error/30',
-    icon: 'text-gx-error',
-  },
-}
-
 const icons: Record<AlertVariant, React.ReactNode> = {
   info: (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -48,15 +30,10 @@ const icons: Record<AlertVariant, React.ReactNode> = {
 }
 
 export default function Alert({ variant, children }: AlertProps) {
-  const config = variantConfig[variant]
-
   return (
-    <div
-      className={`flex gap-3 rounded-lg border p-4 ${config.bg} ${config.border}`}
-      role="alert"
-    >
-      <span className={`flex-shrink-0 ${config.icon}`}>{icons[variant]}</span>
-      <div className="text-sm text-gx-text">{children}</div>
+    <div className={`rqc-alert rqc-alert--${variant}`} role="alert">
+      <span className={`rqc-alert-icon--${variant}`}>{icons[variant]}</span>
+      <div>{children}</div>
     </div>
   )
 }
