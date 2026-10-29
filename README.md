@@ -4,6 +4,8 @@
 
 RonaQC processes BAM files from ARTIC and similar pipelines entirely in the browser using WebAssembly. It assesses cross-contamination, primer contamination, and consensus sequence quality to determine whether samples are suitable for phylogenetic analysis and submission to public databases (GISAID / INSDC). Your BAM files are never uploaded to any server.
 
+**Live app:** [ronaqc.genomicx.org](https://ronaqc.genomicx.org)
+
 ## Features
 
 - ARTIC primer scheme support (V1 through V5.4.2)

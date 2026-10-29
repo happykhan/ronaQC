@@ -13,7 +13,7 @@
 html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
 
 body {
-  font-family: var(--gx-font-sans, 'Inter', ui-sans-serif, system-ui, sans-serif);
+  font-family: var(--gx-font-sans, 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif);
   background: var(--gx-bg);
   color: var(--gx-text);
   line-height: 1.7;
