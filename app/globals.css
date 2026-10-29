@@ -1,3 +1,5 @@
+@import '@genomicx/ui/styles/tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -43,7 +45,7 @@
 body {
   background: var(--gx-bg);
   color: var(--gx-text);
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--gx-font-sans, 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif);
 }
 
 /* ─── Component Classes ─── */

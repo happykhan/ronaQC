@@ -28,8 +28,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        sans: ['var(--gx-font-sans)', 'IBM Plex Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['var(--gx-font-mono)', 'IBM Plex Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       boxShadow: {
         card: '0 6px 18px rgba(19, 31, 63, 0.06)',
